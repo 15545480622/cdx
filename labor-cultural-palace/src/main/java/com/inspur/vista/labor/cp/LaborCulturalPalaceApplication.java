@@ -25,6 +25,7 @@ public class LaborCulturalPalaceApplication {
         //初始化特殊日期到内存
         CalendarUtil.setApplicationContext(applicationContext);
         CalendarUtil.getInstance().initDateList();
+        System.out.println("测试添加内容");
     }
 
 

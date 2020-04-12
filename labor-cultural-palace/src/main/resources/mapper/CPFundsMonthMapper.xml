@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPFundsMonthMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPFundsMonthDetailVO">
+        select
+		id as id,
+		cp_id as cpId,
+		month,
+		in_subsidy_this,
+		in_subsidy_sum,
+		in_subsidy_mark,
+		in_other_this,
+		in_other_sum,
+		in_other_mark,
+		in_cause_this,
+		in_cause_sum,
+		in_cause_mark,
+		in_fees_this,
+		in_fees_sum,
+		in_fees_mark,
+		in_dance_this,
+		in_dance_sum,
+		in_dance_mark,
+		in_computer_this,
+		in_computer_sum,
+		in_computer_mark,
+		in_sum_this,
+		in_sum_sum,
+		in_sum_mark,
+		out_person_this,
+		out_person_sum,
+		out_person_mark,
+		out_official_this,
+		out_official_sum,
+		out_official_mark,
+		out_propaganda_this,
+		out_propaganda_sum,
+		out_propaganda_mark,
+		out_equip_this,
+		out_equip_sum,
+		out_equip_mark,
+		out_repair_this,
+		out_repair_sum,
+		out_repair_mark,
+		out_fund_this,
+		out_fund_sum,
+		out_fund_mark,
+		out_subsidy_this,
+		out_subsidy_sum,
+		out_subsidy_mark,
+		out_other_this,
+		out_other_sum,
+		out_other_mark,
+		out_dispatch_this,
+		out_dispatch_sum,
+		out_dispatch_mark,
+		out_activity_this,
+		out_activity_sum,
+		out_activity_mark,
+		out_sum_this,
+		out_sum_sum,
+		out_sum_mark,
+		operating_balance_this,
+		operating_balance_sum,
+		operating_balance_mark,
+		endterm_balance_this,
+		endterm_balance_sum,
+		endterm_balance_mark,
+		officials_name
+        from
+	cp_funds_month
+        where
+	id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPFundsMonth" parameterType="java.util.Map" resultType="com.inspur.vista.labor.cp.entity.CPFundsMonthListVO">
+        select
+        id as id,
+        cp_id as cpId,
+        month,
+        in_subsidy_this,
+        in_subsidy_sum,
+        in_subsidy_mark,
+        in_other_this,
+        in_other_sum,
+        in_other_mark,
+        in_cause_this,
+        in_cause_sum,
+        in_cause_mark,
+        in_fees_this,
+        in_fees_sum,
+        in_fees_mark,
+        in_dance_this,
+        in_dance_sum,
+        in_dance_mark,
+        in_computer_this,
+        in_computer_sum,
+        in_computer_mark,
+        in_sum_this,
+        in_sum_sum,
+        in_sum_mark,
+        out_person_this,
+        out_person_sum,
+        out_person_mark,
+        out_official_this,
+        out_official_sum,
+        out_official_mark,
+        out_propaganda_this,
+        out_propaganda_sum,
+        out_propaganda_mark,
+        out_equip_this,
+        out_equip_sum,
+        out_equip_mark,
+        out_repair_this,
+        out_repair_sum,
+        out_repair_mark,
+        out_fund_this,
+        out_fund_sum,
+        out_fund_mark,
+        out_subsidy_this,
+        out_subsidy_sum,
+        out_subsidy_mark,
+        out_other_this,
+        out_other_sum,
+        out_other_mark,
+        out_dispatch_this,
+        out_dispatch_sum,
+        out_dispatch_mark,
+        out_activity_this,
+        out_activity_sum,
+        out_activity_mark,
+        out_sum_this,
+        out_sum_sum,
+        out_sum_mark,
+        operating_balance_this,
+        operating_balance_sum,
+        operating_balance_mark,
+        endterm_balance_this,
+        endterm_balance_sum,
+        endterm_balance_mark,
+        officials_name
+        from
+        cp_funds_month a
+        where a.cp_id = #{cpId,jdbcType=BIGINT}
+        <if test="month != null and month != ''">
+            AND month = #{month,jdbcType=VARCHAR}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into cp_funds_month
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="month != null">
+                month,
+            </if>
+            <if test="inSubsidyThis != null">
+                in_subsidy_this,
+            </if>
+            <if test="inSubsidySum != null">
+                in_subsidy_sum,
+            </if>
+            <if test="inSubsidyMark != null">
+                in_subsidy_mark,
+            </if>
+            <if test="inOtherThis != null">
+                in_other_this,
+            </if>
+            <if test="inOtherSum != null">
+                in_other_sum,
+            </if>
+            <if test="inOtherMark != null">
+                in_other_mark,
+            </if>
+            <if test="inCauseThis != null">
+                in_cause_this,
+            </if>
+            <if test="inCauseSum != null">
+                in_cause_sum,
+            </if>
+            <if test="inCauseMark != null">
+                in_cause_mark,
+            </if>
+            <if test="inFeesThis != null">
+                in_fees_this,
+            </if>
+            <if test="inFeesSum != null">
+                in_fees_sum,
+            </if>
+            <if test="inFeesMark != null">
+                in_fees_mark,
+            </if>
+            <if test="inDanceThis != null">
+                in_dance_this,
+            </if>
+            <if test="inDanceSum != null">
+                in_dance_sum,
+            </if>
+            <if test="inDanceMark != null">
+                in_dance_mark,
+            </if>
+            <if test="inComputerThis != null">
+                in_computer_this,
+            </if>
+            <if test="inComputerSum != null">
+                in_computer_sum,
+            </if>
+            <if test="inComputerMark != null">
+                in_computer_mark,
+            </if>
+            <if test="inSumThis != null">
+                in_sum_this,
+            </if>
+            <if test="inSumSum != null">
+                in_sum_sum,
+            </if>
+            <if test="inSumMark != null">
+                in_sum_mark,
+            </if>
+            <if test="outPersonThis != null">
+                out_person_this,
+            </if>
+            <if test="outPersonSum != null">
+                out_person_sum,
+            </if>
+            <if test="outPersonMark != null">
+                out_person_mark,
+            </if>
+            <if test="outOfficialThis != null">
+                out_official_this,
+            </if>
+            <if test="outOfficialSum != null">
+                out_official_sum,
+            </if>
+            <if test="outOfficialMark != null">
+                out_official_mark,
+            </if>
+            <if test="outPropagandaThis != null">
+                out_propaganda_this,
+            </if>
+            <if test="outPropagandaSum != null">
+                out_propaganda_sum,
+            </if>
+            <if test="outPropagandaMark != null">
+                out_propaganda_mark,
+            </if>
+            <if test="outEquipThis != null">
+                out_equip_this,
+            </if>
+            <if test="outEquipSum != null">
+                out_equip_sum,
+            </if>
+            <if test="outEquipMark != null">
+                out_equip_mark,
+            </if>
+            <if test="outRepairThis != null">
+                out_repair_this,
+            </if>
+            <if test="outRepairSum != null">
+                out_repair_sum,
+            </if>
+            <if test="outRepairMark != null">
+                out_repair_mark,
+            </if>
+            <if test="outFundThis != null">
+                out_fund_this,
+            </if>
+            <if test="outFundSum != null">
+                out_fund_sum,
+            </if>
+            <if test="outFundMark != null">
+                out_fund_mark,
+            </if>
+            <if test="outSubsidyThis != null">
+                out_subsidy_this,
+            </if>
+            <if test="outSubsidySum != null">
+                out_subsidy_sum,
+            </if>
+            <if test="outSubsidyMark != null">
+                out_subsidy_mark,
+            </if>
+            <if test="outOtherThis != null">
+                out_other_this,
+            </if>
+            <if test="outOtherSum != null">
+                out_other_sum,
+            </if>
+            <if test="outOtherMark != null">
+                out_other_mark,
+            </if>
+            <if test="outDispatchThis != null">
+                out_dispatch_this,
+            </if>
+            <if test="outDispatchSum != null">
+                out_dispatch_sum,
+            </if>
+            <if test="outDispatchMark != null">
+                out_dispatch_mark,
+            </if>
+            <if test="outActivityThis != null">
+                out_activity_this,
+            </if>
+            <if test="outActivitySum != null">
+                out_activity_sum,
+            </if>
+            <if test="outActivityMark != null">
+                out_activity_mark,
+            </if>
+            <if test="outSumThis != null">
+                out_sum_this,
+            </if>
+            <if test="outSumSum != null">
+                out_sum_sum,
+            </if>
+            <if test="outSumMark != null">
+                out_sum_mark,
+            </if>
+            <if test="operatingBalanceThis != null">
+                operating_balance_this,
+            </if>
+            <if test="operatingBalanceSum != null">
+                operating_balance_sum,
+            </if>
+            <if test="operatingBalanceMark != null">
+                operating_balance_mark,
+            </if>
+            <if test="endtermBalanceThis != null">
+                endterm_balance_this,
+            </if>
+            <if test="endtermBalanceSum != null">
+                endterm_balance_sum,
+            </if>
+            <if test="endtermBalanceMark != null">
+                endterm_balance_mark,
+            </if>
+            <if test="officialsName != null">
+                officials_name,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+            update_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cpId != null">
+                #{cpId,jdbcType=BIGINT},
+            </if>
+            <if test="month != null">
+                #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="inSubsidyThis != null">
+                #{inSubsidyThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inSubsidySum != null">
+                #{inSubsidySum,jdbcType=DECIMAL},
+            </if>
+            <if test="inSubsidyMark != null">
+                #{inSubsidyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inOtherThis != null">
+                #{inOtherThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inOtherSum != null">
+                #{inOtherSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inOtherMark != null">
+                #{inOtherMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inCauseThis != null">
+                #{inCauseThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inCauseSum != null">
+                #{inCauseSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inCauseMark != null">
+                #{inCauseMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inFeesThis != null">
+                #{inFeesThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inFeesSum != null">
+                #{inFeesSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inFeesMark != null">
+                #{inFeesMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inDanceThis != null">
+                #{inDanceThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inDanceSum != null">
+                #{inDanceSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inDanceMark != null">
+                #{inDanceMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inComputerThis != null">
+                #{inComputerThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inComputerSum != null">
+                #{inComputerSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inComputerMark != null">
+                #{inComputerMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inSumThis != null">
+                #{inSumThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inSumSum != null">
+                #{inSumSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inSumMark != null">
+                #{inSumMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outPersonThis != null">
+                #{outPersonThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outPersonSum != null">
+                #{outPersonSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outPersonMark != null">
+                #{outPersonMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outOfficialThis != null">
+                #{outOfficialThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outOfficialSum != null">
+                #{outOfficialSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outOfficialMark != null">
+                #{outOfficialMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outPropagandaThis != null">
+                #{outPropagandaThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outPropagandaSum != null">
+                #{outPropagandaSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outPropagandaMark != null">
+                #{outPropagandaMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outEquipThis != null">
+                #{outEquipThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outEquipSum != null">
+                #{outEquipSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outEquipMark != null">
+                #{outEquipMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outRepairThis != null">
+                #{outRepairThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outRepairSum != null">
+                #{outRepairSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outRepairMark != null">
+                #{outRepairMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outFundThis != null">
+                #{outFundThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outFundSum != null">
+                #{outFundSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outFundMark != null">
+                #{outFundMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outSubsidyThis != null">
+                #{outSubsidyThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outSubsidySum != null">
+                #{outSubsidySum,jdbcType=DECIMAL},
+            </if>
+            <if test="outSubsidyMark != null">
+                #{outSubsidyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outOtherThis != null">
+                #{outOtherThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outOtherSum != null">
+                #{outOtherSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outOtherMark != null">
+                #{outOtherMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outDispatchThis != null">
+                #{outDispatchThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outDispatchSum != null">
+                #{outDispatchSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outDispatchMark != null">
+                #{outDispatchMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outActivityThis != null">
+                #{outActivityThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outActivitySum != null">
+                #{outActivitySum,jdbcType=DECIMAL},
+            </if>
+            <if test="outActivityMark != null">
+                #{outActivityMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outSumThis != null">
+                #{outSumThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outSumSum != null">
+                #{outSumSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outSumMark != null">
+                #{outSumMark,jdbcType=VARCHAR},
+            </if>
+            <if test="operatingBalanceThis != null">
+                #{operatingBalanceThis,jdbcType=DECIMAL},
+            </if>
+            <if test="operatingBalanceSum != null">
+                #{operatingBalanceSum,jdbcType=DECIMAL},
+            </if>
+            <if test="operatingBalanceMark != null">
+                #{operatingBalanceMark,jdbcType=VARCHAR},
+            </if>
+            <if test="endtermBalanceThis != null">
+                #{endtermBalanceThis,jdbcType=DECIMAL},
+            </if>
+            <if test="endtermBalanceSum != null">
+                #{endtermBalanceSum,jdbcType=DECIMAL},
+            </if>
+            <if test="endtermBalanceMark != null">
+                #{endtermBalanceMark,jdbcType=VARCHAR},
+            </if>
+            <if test="officialsName != null">
+                #{officialsName,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_funds_month
+        <set>
+            <if test="cpId != null">
+                cp_id = #{cpId,jdbcType=BIGINT},
+            </if>
+            <if test="month != null">
+                month = #{month,jdbcType=VARCHAR},
+            </if>
+            <if test="inSubsidyThis != null">
+                in_subsidy_this = #{inSubsidyThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inSubsidySum != null">
+                in_subsidy_sum = #{inSubsidySum,jdbcType=DECIMAL},
+            </if>
+            <if test="inSubsidyMark != null">
+                in_subsidy_mark = #{inSubsidyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inOtherThis != null">
+                in_other_this = #{inOtherThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inOtherSum != null">
+                in_other_sum = #{inOtherSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inOtherMark != null">
+                in_other_mark = #{inOtherMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inCauseThis != null">
+                in_cause_this = #{inCauseThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inCauseSum != null">
+                in_cause_sum = #{inCauseSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inCauseMark != null">
+                in_cause_mark = #{inCauseMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inFeesThis != null">
+                in_fees_this = #{inFeesThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inFeesSum != null">
+                in_fees_sum = #{inFeesSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inFeesMark != null">
+                in_fees_mark = #{inFeesMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inDanceThis != null">
+                in_dance_this = #{inDanceThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inDanceSum != null">
+                in_dance_sum = #{inDanceSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inDanceMark != null">
+                in_dance_mark = #{inDanceMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inComputerThis != null">
+                in_computer_this = #{inComputerThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inComputerSum != null">
+                in_computer_sum = #{inComputerSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inComputerMark != null">
+                in_computer_mark = #{inComputerMark,jdbcType=VARCHAR},
+            </if>
+            <if test="inSumThis != null">
+                in_sum_this = #{inSumThis,jdbcType=DECIMAL},
+            </if>
+            <if test="inSumSum != null">
+                in_sum_sum = #{inSumSum,jdbcType=DECIMAL},
+            </if>
+            <if test="inSumMark != null">
+                in_sum_mark = #{inSumMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outPersonThis != null">
+                out_person_this = #{outPersonThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outPersonSum != null">
+                out_person_sum = #{outPersonSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outPersonMark != null">
+                out_person_mark = #{outPersonMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outOfficialThis != null">
+                out_official_this = #{outOfficialThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outOfficialSum != null">
+                out_official_sum = #{outOfficialSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outOfficialMark != null">
+                out_official_mark = #{outOfficialMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outPropagandaThis != null">
+                out_propaganda_this = #{outPropagandaThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outPropagandaSum != null">
+                out_propaganda_sum = #{outPropagandaSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outPropagandaMark != null">
+                out_propaganda_mark = #{outPropagandaMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outEquipThis != null">
+                out_equip_this = #{outEquipThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outEquipSum != null">
+                out_equip_sum = #{outEquipSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outEquipMark != null">
+                out_equip_mark = #{outEquipMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outRepairThis != null">
+                out_repair_this = #{outRepairThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outRepairSum != null">
+                out_repair_sum = #{outRepairSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outRepairMark != null">
+                out_repair_mark = #{outRepairMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outFundThis != null">
+                out_fund_this = #{outFundThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outFundSum != null">
+                out_fund_sum = #{outFundSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outFundMark != null">
+                out_fund_mark = #{outFundMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outSubsidyThis != null">
+                out_subsidy_this = #{outSubsidyThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outSubsidySum != null">
+                out_subsidy_sum = #{outSubsidySum,jdbcType=DECIMAL},
+            </if>
+            <if test="outSubsidyMark != null">
+                out_subsidy_mark = #{outSubsidyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outOtherThis != null">
+                out_other_this = #{outOtherThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outOtherSum != null">
+                out_other_sum = #{outOtherSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outOtherMark != null">
+                out_other_mark = #{outOtherMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outDispatchThis != null">
+                out_dispatch_this = #{outDispatchThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outDispatchSum != null">
+                out_dispatch_sum = #{outDispatchSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outDispatchMark != null">
+                out_dispatch_mark  =#{outDispatchMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outActivityThis != null">
+                out_activity_this = #{outActivityThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outActivitySum != null">
+                out_activity_sum = #{outActivitySum,jdbcType=DECIMAL},
+            </if>
+            <if test="outActivityMark != null">
+                out_activity_mark = #{outActivityMark,jdbcType=VARCHAR},
+            </if>
+            <if test="outSumThis != null">
+                out_sum_this = #{outSumThis,jdbcType=DECIMAL},
+            </if>
+            <if test="outSumSum != null">
+                out_sum_sum = #{outSumSum,jdbcType=DECIMAL},
+            </if>
+            <if test="outSumMark != null">
+                out_sum_mark = #{outSumMark,jdbcType=VARCHAR},
+            </if>
+            <if test="operatingBalanceThis != null">
+                operating_balance_this = #{operatingBalanceThis,jdbcType=DECIMAL},
+            </if>
+            <if test="operatingBalanceSum != null">
+                operating_balance_sum = #{operatingBalanceSum,jdbcType=DECIMAL},
+            </if>
+            <if test="operatingBalanceMark != null">
+                operating_balance_mark = #{operatingBalanceMark,jdbcType=VARCHAR},
+            </if>
+            <if test="endtermBalanceThis != null">
+                endterm_balance_this = #{endtermBalanceThis,jdbcType=DECIMAL},
+            </if>
+            <if test="endtermBalanceSum != null">
+                endterm_balance_sum = #{endtermBalanceSum,jdbcType=DECIMAL},
+            </if>
+            <if test="endtermBalanceMark != null">
+                endterm_balance_mark = #{endtermBalanceMark,jdbcType=VARCHAR},
+            </if>
+            <if test="officialsName != null">
+                officials_name = #{officialsName,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

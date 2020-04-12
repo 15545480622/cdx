@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPProfessionalTalentMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPProfessionalTalentVO">
+        SELECT id,
+        cp_id,
+        name,
+        idcard,
+        sex,
+        nation,
+        education,
+        political_outlook,
+        phone,
+        employment_type,
+        type,
+        is_staffing
+        FROM cp_professional_talent
+        WHERE state = 1
+        AND id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPProfessionalTalent" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPProfessionalTalentListVO">
+        SELECT
+        id,cp_id,name,idcard,sex,nation,education,political_outlook,phone,employment_type,type,is_staffing,introduction
+        FROM cp_professional_talent
+        where state = 1 AND cp_id = #{cpId,jdbcType=VARCHAR}
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="idcard != null and idcard != ''">
+            AND idcard = #{idcard,jdbcType=VARCHAR}
+        </if>
+        <if test="employmentType != null and employmentType != ''">
+            AND employment_type = #{employmentType,jdbcType=INTEGER}
+        </if>
+        <if test="isStaffing != null and isStaffing != ''">
+            AND is_staffing = #{isStaffing,jdbcType=INTEGER}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_professional_talent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="idcard != null">
+                idcard,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="nation != null">
+                nation,
+            </if>
+            <if test="education != null">
+                education,
+            </if>
+            <if test="politicalOutlook != null">
+                political_outlook,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="employmentType != null">
+                employment_type,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isStaffing != null">
+                is_staffing,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            state,
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="education != null">
+                #{education,jdbcType=VARCHAR},
+            </if>
+            <if test="politicalOutlook != null">
+                #{politicalOutlook,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="employmentType != null">
+                #{employmentType,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isStaffing != null">
+                #{isStaffing,jdbcType=INTEGER},
+            </if>
+            <if test="introduction != null">
+                #{introduction,jdbcType=VARCHAR},
+            </if>
+            1,
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_professional_talent
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="idcard != null">
+                idcard = #{idcard,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="nation != null">
+                nation = #{nation,jdbcType=VARCHAR},
+            </if>
+            <if test="education != null">
+                education = #{education,jdbcType=VARCHAR},
+            </if>
+            <if test="politicalOutlook != null">
+                political_outlook = #{politicalOutlook,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="employmentType != null">
+                employment_type = #{employmentType,jdbcType=INTEGER},
+            </if>
+            <if test="isStaffing != null">
+                is_staffing = #{isStaffing,jdbcType=INTEGER},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPProfessionalTalentById" parameterType="java.util.Map">
+        update cp_professional_talent
+        set state = 0
+        , modifier = #{modifier,jdbcType=VARCHAR}
+        , update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPProfessionalTalentById" parameterType="java.util.Map">
+        update cp_professional_talent
+        set state = 0
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <!-- 列表(全部) -->
+    <select id="listCPProfessionalTalentByCourtId" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPProfessionalTalentListVO">
+        SELECT
+        cpt.id,cpt.cp_id,cpt.name,cpt.idcard,cpt.sex,cpt.nation,cpt.education,cpt.political_outlook,cpt.phone,cpt.employment_type,cpt.type,cpt.is_staffing
+        FROM cp_professional_talent cpt
+        LEFT JOIN cp_court_talent cct ON cpt.id = cct.talent_id
+        WHERE state = 1 AND cpt.cp_id = #{cpId,jdbcType=VARCHAR}
+        AND cct.court_id = #{courtId,jdbcType=VARCHAR}
+        ORDER BY cpt.create_time DESC
+    </select>
+
+</mapper>

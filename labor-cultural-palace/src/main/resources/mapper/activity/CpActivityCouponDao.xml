@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.activity.CPCultureCouponMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.inspur.vista.labor.cp.entity.activity.CPCultureCouponEntity" id="cpCultureCouponMap">
+        <result property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="count" column="count"/>
+        <result property="instruction" column="instruction"/>
+        <result property="brief" column="brief"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="amount" column="amount"/>
+        <result property="type" column="type"/>
+        <result property="cultureId" column="culture_id"/>
+        <result property="cultureName" column="culture_name"/>
+        <result property="cultureLogo" column="culture_logo"/>
+        <result property="cultureAddress" column="culture_address"/>
+        <result property="culturePhone" column="culture_phone"/>
+        <result property="status" column="status"/>
+        <result property="laborCode" column="labor_code"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="deleted" column="deleted"/>
+        <result property="createTime" column="create_time"/>
+        <result property="couponName" column="coupon_name"/>
+        <result property="receiveNum" column="receive_num"/>
+        <result property="turn" column="turn"/>
+        <result property="totalCount" column="total_count"/>
+        <result property="activityId" column="activityId"/>
+        <result property="activityType" column="activityType"/>
+        <result property="activityName" column="activityName"/>
+        <result property="limitCouponCount" column="limitCouponCount"/>
+    </resultMap>
+
+    <!--核销详细-->
+    <resultMap type="com.inspur.vista.labor.cp.entity.activity.CpActivityCouponRecordsEntity" id="verificationDetaiMap">
+        <result property="id" column="id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="status" column="status"/>
+        <result property="useTime" column="use_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userCardNum" column="user_card_num"/>
+        <result property="districtCode" column="district_code"/>
+        <result property="districtName" column="district_name"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="couponName" column="coupon_name"/>
+    </resultMap>
+
+
+    <update id="updateCount">
+        UPDATE cp_activity_coupon
+        SET `count` = `count` - #{count}
+        where id = #{couponId}
+    </update>
+
+
+    <select id="getVerificationCouponList" resultMap="cpCultureCouponMap">
+        SELECT
+            TB1.id AS 'activityId',
+            TB1.title AS 'activityName',
+            TB1.coupon_count AS 'limitCouponCount',
+            TB1.type AS 'activityType',
+            TB2.*
+        FROM
+            ( SELECT * FROM cp_activity_base t1 WHERE t1.type = 'tickets' ) TB1
+            INNER JOIN cp_activity_coupon TB2 ON TB1.coupon_id = TB2.id
+        WHERE 1=1
+        <if test="laborId != null and laborId != ''">
+            AND TB1.labor_id = #{laborId}
+        </if>
+        <if test="activityName != null and activityName != ''">
+            AND TB1.title LIKE '%${activityName}%'
+        </if>
+        <if test="couponName != null and couponName != ''">
+            AND TB2.`name` LIKE '%${couponName}%'
+        </if>
+    </select>
+
+    <!--待使用-->
+    <select id="verificationDetailList" resultMap="verificationDetaiMap">
+        SELECT
+            T2.title AS activity_name,
+            T3.`name` AS coupon_name,
+            T1.*
+        FROM
+            cp_activity_coupon_records T1
+            LEFT JOIN cp_activity_base T2 ON T1.activity_id = T2.id
+            LEFT JOIN cp_activity_coupon T3 ON T1.coupon_id = T3.ID
+        WHERE T1.activity_id = 344
+                    AND T1.coupon_id = 1793
+                    /*AND T1.`status` = '1'*/
+                    AND activity_name LIKE '%%'
+                    AND coupon_name LIKE '%%'
+    </select>
+
+
+
+
+</mapper>

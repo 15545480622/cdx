@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPReserveSceneMapper">
+
+    <!-- 列表(全部) -->
+    <select id="listReserveSceneByReserveId" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPReserveSceneEntity">
+        SELECT a.id,
+               a.reserve_id,
+               a.begin_time,
+               a.end_time,
+               a.creator,
+               a.create_time,
+               a.modifier,
+               a.update_time,
+               a.remark
+        FROM cp_reserve_scene a
+        WHERE a.reserve_id = #{reserveId,jdbcType=VARCHAR}
+        ORDER BY a.create_time DESC
+    </select>
+    <select id="listByReserveId" resultType="com.inspur.vista.labor.cp.entity.CPReserveSceneVO">
+        SELECT a.id,
+               a.reserve_id,
+               a.begin_time,
+               a.end_time
+        FROM cp_reserve_scene a
+                 LEFT JOIN cp_reserve_info reserve ON reserve.id = a.reserve_id
+        WHERE a.reserve_id = #{reserveId,jdbcType=VARCHAR}
+        ORDER BY a.begin_time
+    </select>
+    <select id="selectByTimeAndCourt" resultType="com.inspur.vista.labor.cp.entity.CPReserveSceneListVO">
+        SELECT a.id,
+               a.reserve_id,
+               a.begin_time,
+               a.end_time,
+               reserve.court_id,
+               SUM(IFNULL(ru.count, 0)) as userNum
+        FROM cp_reserve_scene a
+                 LEFT JOIN cp_reserve_info reserve ON reserve.id = a.reserve_id
+                 LEFT JOIN (SELECT reserve_id, COUNT(*) AS count FROM cp_reserve_user GROUP BY reserve_id) ru
+                           ON ru.reserve_id = a.reserve_id
+        WHERE reserve.court_id = #{courtId,jdbcType=VARCHAR}
+          AND a.begin_time = #{beginTime,jdbcType=VARCHAR}
+          AND a.end_time = #{endTime,jdbcType=VARCHAR}
+          AND reserve.state in (0, 1)
+        GROUP BY a.id, a.reserve_id, a.begin_time, a.end_time, a.create_time
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="listByBeginDateAndEndDate" resultType="com.inspur.vista.labor.cp.entity.CPReserveSceneListVO">
+        SELECT
+        a.id,a.reserve_id,a.begin_time,a.end_time,reserve.court_id,SUM(IFNULL(ru.count,0)) as userNum
+        FROM cp_reserve_scene a
+        LEFT JOIN cp_reserve_info reserve ON reserve.id = a.reserve_id
+        LEFT JOIN (SELECT reserve_id,COUNT(*) AS count FROM cp_reserve_user GROUP BY reserve_id) ru ON
+        ru.reserve_id=a.reserve_id
+        WHERE reserve.court_id = #{courtId,jdbcType=VARCHAR}
+        AND date(begin_time) >= #{cxBeginDate,jdbcType=VARCHAR}
+        AND date(end_time) &lt;= #{cxEndDate,jdbcType=VARCHAR}
+        AND reserve.state in
+        <foreach collection="states" item="state" open="(" separator="," close=")">
+            #{state}
+        </foreach>
+        GROUP BY a.id,a.reserve_id,a.begin_time,a.end_time
+        ORDER BY a.begin_time DESC
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO cp_reserve_scene(
+        reserve_id,
+        begin_time,
+        end_time,
+        creator,
+        create_time,
+        modifier,
+        update_time
+        )
+        VALUES
+        <foreach collection="dataList" item="item" index="index" separator=",">
+            (
+            #{item.reserveId,jdbcType=VARCHAR},
+            #{item.beginTime,jdbcType=TIMESTAMP},
+            #{item.endTime,jdbcType=TIMESTAMP},
+            #{item.creator,jdbcType=VARCHAR},
+            now(),
+            #{item.modifier,jdbcType=VARCHAR},
+            now()
+            )
+        </foreach>
+    </insert>
+    <select id="selectByTimeAndUser" resultType="com.inspur.vista.labor.cp.entity.CPReserveSceneVO">
+        SELECT rs.*
+        FROM cp_reserve_scene rs
+                 LEFT JOIN cp_reserve_user ru ON rs.reserve_id = ru.reserve_id
+                 LEFT JOIN cp_reserve_info ri ON ri.id = rs.reserve_id
+        WHERE ri.state IN (0, 1)
+          AND ru.user_phone = #{phone,jdbcType=VARCHAR}
+          AND rs.begin_time = #{beginTime,jdbcType=VARCHAR}
+          AND rs.end_time = #{endTime,jdbcType=VARCHAR}
+    </select>
+</mapper>

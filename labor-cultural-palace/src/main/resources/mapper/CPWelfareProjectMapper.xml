@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPWelfareProjectMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPWelfareProjectVO">
+        select
+		id,
+		cp_id,
+		type,
+		name,
+		content
+        from
+	    cp_welfare_project
+        where
+	    id = #{id,jdbcType=VARCHAR} and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPWelfareProject" parameterType="java.util.Map" resultType="com.inspur.vista.labor.cp.entity.CPWelfareProjectListVO">
+        select
+        id,
+        cp_id,
+        type,
+        name,
+        content
+        from
+        cp_welfare_project
+        where state = 1 and cp_id = #{cpId,jdbcType=VARCHAR}
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="type != null and type != ''">
+            AND type = #{type,jdbcType=INTEGER}
+        </if>
+        order by create_time desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into cp_welfare_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_welfare_project
+        <set>
+            <if test="cpId != null">
+                cp_id = #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPWelfareProjectById" parameterType="java.util.Map">
+        update cp_welfare_project
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where
+	id = #{id,jdbcType=VARCHAR}
+	</update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPWelfareProjectById" parameterType="java.util.Map">
+        update cp_welfare_project
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+</mapper>

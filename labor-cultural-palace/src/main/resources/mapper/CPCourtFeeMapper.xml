@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPCourtFeeMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPCourtFeeVO">
+        select
+		id,court_id,reserve_fee,use_fee,begin_time,end_time
+        from
+        cp_court_fee
+        where
+	        id = #{id,jdbcType=VARCHAR} and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPArenaFee" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPCourtFeeListVO">
+        select
+        id,court_id,reserve_fee,use_fee,begin_time,end_time
+        from
+        cp_court_fee
+        where state = 1
+        <if test="courtId != null and courtId != ''">
+            and court_id = #{courtId,jdbcType=VARCHAR}
+        </if>
+        order by create_time desc
+    </select>
+    <select id="selectEffective" resultType="com.inspur.vista.labor.cp.entity.CPCourtFeeEntity">
+        select
+        *
+        from
+        cp_court_fee
+        where
+        court_id = #{courtId,jdbcType=VARCHAR}
+        and state = 1 and begin_time &lt;= now() and (end_time is null or end_time>=now())
+    </select>
+    <select id="selectToBeEffective" resultType="com.inspur.vista.labor.cp.entity.CPCourtFeeEntity">
+        select
+        *
+        from
+        cp_court_fee
+        where
+        court_id = #{courtId,jdbcType=VARCHAR}
+        and state = 1 and begin_time > now()
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_court_fee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="courtId != null">
+                court_id,
+            </if>
+            <if test="reserveFee != null">
+                reserve_fee,
+            </if>
+            <if test="useFee != null">
+                use_fee,
+            </if>
+            <if test="beginTime != null">
+                begin_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="courtId != null">
+                #{courtId,jdbcType=VARCHAR},
+            </if>
+            <if test="reserveFee != null">
+                #{reserveFee,jdbcType=DECIMAL},
+            </if>
+            <if test="useFee != null">
+                #{useFee,jdbcType=DECIMAL},
+            </if>
+            <if test="beginTime != null">
+                #{beginTime,jdbcType=DATE},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=DATE},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_court_fee
+        <set>
+            <if test="reserveFee != null">
+                reserve_fee = #{reserveFee,jdbcType=DECIMAL},
+            </if>
+            <if test="useFee != null">
+                use_fee = #{useFee,jdbcType=DECIMAL},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=DATE},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPArenaFeeById" parameterType="java.util.Map">
+        update cp_court_fee
+        set state = 0
+			,modifier = #{modifier,jdbcType=VARCHAR}
+			,update_time = now()
+        where
+		id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPArenaFeeById" parameterType="java.util.Map">
+        update cp_court_fee
+        set state = 0
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="removeEndTime">
+        update cp_court_fee
+        set end_time = null
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectLast" resultType="com.inspur.vista.labor.cp.entity.CPCourtFeeEntity">
+        SELECT * FROM cp_court_fee WHERE end_time IS NULL AND state = 1 AND court_id = #{courtId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByCourtIdAndDate" resultType="com.inspur.vista.labor.cp.entity.CPCourtFeeVO">
+        SELECT * FROM cp_court_fee
+        WHERE court_id = #{courtId,jdbcType=VARCHAR}
+        AND date(begin_time) &lt;= #{date,jdbcType=VARCHAR}
+        AND (date(end_time) >= #{date,jdbcType=VARCHAR} or end_time IS NULL)
+    </select>
+
+
+</mapper>

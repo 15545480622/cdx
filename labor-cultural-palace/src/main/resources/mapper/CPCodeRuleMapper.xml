@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPCodeRuleMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPCodeRuleEntity">
+        select cant_code,prefix_cp_code,current_value,creator,modifier,create_time,update_time,remark
+        from cp_code_rule
+        where cant_code = #{cantCode,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateCurrentValue">
+        UPDATE cp_code_rule
+        set current_value=current_value+1
+        where
+        cant_code = #{cantCode,jdbcType=VARCHAR}
+    </update>
+
+
+</mapper>

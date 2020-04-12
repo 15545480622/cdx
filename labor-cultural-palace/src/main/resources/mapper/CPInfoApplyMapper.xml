@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPInfoApplyMapper">
+
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPInfoApplyVO">
+        SELECT
+        apply.*,organ.ORGAN_NAME AS laborName
+        FROM
+        cp_info_apply apply,
+        pub.organ organ
+        WHERE apply.labor_id = organ.ORGAN_ID AND apply.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertSelective">
+        INSERT INTO cp_info_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="isUnionAssets != null">
+                is_union_assets,
+            </if>
+            <if test="isAloneAccount != null">
+                is_alone_account,
+            </if>
+            <if test="aloneAccount != null">
+                alone_account,
+            </if>
+            <if test="unionLevel != null">
+                union_level,
+            </if>
+            <if test="socialCreditCode != null">
+                social_credit_code,
+            </if>
+            <if test="publicWelfareType != null">
+                public_welfare_type,
+            </if>
+            <if test="serviceFacilities != null">
+                service_facilities,
+            </if>
+            <if test="officialsName != null">
+                officials_name,
+            </if>
+            <if test="officialsPhone != null">
+                officials_phone,
+            </if>
+            <if test="establishDate != null">
+                establish_date,
+            </if>
+            <if test="businessTime != null">
+                business_time,
+            </if>
+            <if test="isAllDay != null">
+                is_all_day,
+            </if>
+            <if test="businessWeek != null">
+                business_week,
+            </if>
+            <if test="contactName != null">
+                contact_name,
+            </if>
+            <if test="contactPhone != null">
+                contact_phone,
+            </if>
+            <if test="staffingPeople != null">
+                staffing_people,
+            </if>
+            <if test="realPeople != null">
+                real_people,
+            </if>
+            <if test="onjobPeople != null">
+                onjob_people,
+            </if>
+            <if test="externalPeople != null">
+                external_people,
+            </if>
+            <if test="retirePeople != null">
+                retire_people,
+            </if>
+            <if test="parkNum != null">
+                park_num,
+            </if>
+            <if test="businessRange != null">
+                business_range,
+            </if>
+            <if test="district != null">
+                district,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            <if test="lng != null">
+                lng,
+            </if>
+            <if test="lat != null">
+                lat,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="constructionArea != null">
+                construction_area,
+            </if>
+            <if test="leasedConstructionArea != null">
+                leased_construction_area,
+            </if>
+            <if test="capacity != null">
+                capacity,
+            </if>
+            <if test="laborId != null">
+                labor_id,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnionAssets != null">
+                #{isUnionAssets,jdbcType=INTEGER},
+            </if>
+            <if test="isAloneAccount != null">
+                #{isAloneAccount,jdbcType=INTEGER},
+            </if>
+            <if test="aloneAccount != null">
+                #{aloneAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="unionLevel != null">
+                #{unionLevel,jdbcType=INTEGER},
+            </if>
+            <if test="socialCreditCode != null">
+                #{socialCreditCode,jdbcType=VARCHAR},
+            </if>
+            <if test="publicWelfareType != null">
+                #{publicWelfareType,jdbcType=INTEGER},
+            </if>
+            <if test="serviceFacilities != null">
+                #{serviceFacilities,jdbcType=VARCHAR},
+            </if>
+            <if test="officialsName != null">
+                #{officialsName,jdbcType=VARCHAR},
+            </if>
+            <if test="officialsPhone != null">
+                #{officialsPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="establishDate != null">
+                #{establishDate,jdbcType=DATE},
+            </if>
+            <if test="businessTime != null">
+                #{businessTime,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllDay != null">
+                #{isAllDay,jdbcType=INTEGER},
+            </if>
+            <if test="businessWeek != null">
+                #{businessWeek,jdbcType=VARCHAR},
+            </if>
+            <if test="contactName != null">
+                #{contactName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="staffingPeople != null">
+                #{staffingPeople,jdbcType=INTEGER},
+            </if>
+            <if test="realPeople != null">
+                #{realPeople,jdbcType=INTEGER},
+            </if>
+            <if test="onjobPeople != null">
+                #{onjobPeople,jdbcType=INTEGER},
+            </if>
+            <if test="externalPeople != null">
+                #{externalPeople,jdbcType=INTEGER},
+            </if>
+            <if test="retirePeople != null">
+                #{retirePeople,jdbcType=INTEGER},
+            </if>
+            <if test="parkNum != null">
+                #{parkNum,jdbcType=INTEGER},
+            </if>
+            <if test="businessRange != null">
+                #{businessRange,jdbcType=VARCHAR},
+            </if>
+            <if test="district != null">
+                #{district,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null">
+                #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="lng != null">
+                #{lng,jdbcType=DECIMAL},
+            </if>
+            <if test="lat != null">
+                #{lat,jdbcType=DECIMAL},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=DECIMAL},
+            </if>
+            <if test="constructionArea != null">
+                #{constructionArea,jdbcType=DECIMAL},
+            </if>
+            <if test="leasedConstructionArea != null">
+                #{leasedConstructionArea,jdbcType=DECIMAL},
+            </if>
+            <if test="capacity != null">
+                #{capacity,jdbcType=INTEGER},
+            </if>
+            <if test="laborId != null">
+                #{laborId,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        UPDATE cp_info_apply
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="isUnionAssets != null">
+                is_union_assets = #{isUnionAssets,jdbcType=INTEGER},
+            </if>
+            <if test="isAloneAccount != null">
+                is_alone_account = #{isAloneAccount,jdbcType=INTEGER},
+            </if>
+            <if test="aloneAccount != null">
+                alone_account = #{aloneAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="unionLevel != null">
+                union_level = #{unionLevel,jdbcType=INTEGER},
+            </if>
+            <if test="socialCreditCode != null">
+                social_credit_code = #{socialCreditCode,jdbcType=VARCHAR},
+            </if>
+            <if test="publicWelfareType != null">
+                public_welfare_type = #{publicWelfareType,jdbcType=INTEGER},
+            </if>
+            <if test="serviceFacilities != null">
+                service_facilities = #{serviceFacilities,jdbcType=VARCHAR},
+            </if>
+            <if test="officialsName != null">
+                officials_name = #{officialsName,jdbcType=VARCHAR},
+            </if>
+            <if test="officialsPhone != null">
+                officials_phone = #{officialsPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="establishDate != null">
+                establish_date = #{establishDate,jdbcType=DATE},
+            </if>
+            <if test="businessTime != null">
+                business_time = #{businessTime,jdbcType=VARCHAR},
+            </if>
+            <if test="isAllDay != null">
+                is_all_day = #{isAllDay,jdbcType=INTEGER},
+            </if>
+            <if test="businessWeek != null">
+                business_week = #{businessWeek,jdbcType=VARCHAR},
+            </if>
+            <if test="contactName != null">
+                contact_name = #{contactName,jdbcType=VARCHAR},
+            </if>
+            <if test="contactPhone != null">
+                contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="staffingPeople != null">
+                staffing_people = #{staffingPeople,jdbcType=INTEGER},
+            </if>
+            <if test="realPeople != null">
+                real_people = #{realPeople,jdbcType=INTEGER},
+            </if>
+            <if test="onjobPeople != null">
+                onjob_people = #{onjobPeople,jdbcType=INTEGER},
+            </if>
+            <if test="externalPeople != null">
+                external_people = #{externalPeople,jdbcType=INTEGER},
+            </if>
+            <if test="retirePeople != null">
+                retire_people = #{retirePeople,jdbcType=INTEGER},
+            </if>
+            <if test="parkNum != null">
+                park_num = #{parkNum,jdbcType=INTEGER},
+            </if>
+            <if test="businessRange != null">
+                business_range = #{businessRange,jdbcType=VARCHAR},
+            </if>
+            <if test="district != null">
+                district = #{district,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="lng != null">
+                lng = #{lng,jdbcType=DECIMAL},
+            </if>
+            <if test="lat != null">
+                lat = #{lat,jdbcType=DECIMAL},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=DECIMAL},
+            </if>
+            <if test="constructionArea != null">
+                construction_area = #{constructionArea,jdbcType=DECIMAL},
+            </if>
+            <if test="leasedConstructionArea != null">
+                leased_construction_area = #{leasedConstructionArea,jdbcType=DECIMAL},
+            </if>
+            <if test="capacity != null">
+                capacity = #{capacity,jdbcType=INTEGER},
+            </if>
+            <if test="laborId != null">
+                labor_id = #{laborId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="selectNoFinishApply" resultType="com.inspur.vista.labor.cp.entity.CPInfoApplyVO">
+        SELECT info_apply.*,organ.ORGAN_NAME FROM cp_info_apply info_apply
+        LEFT JOIN flow_tpl_instance fi ON fi.bsn_id=info_apply.id
+        LEFT JOIN pub.organ organ on organ.ORGAN_ID=info_apply.labor_id
+        WHERE info_apply.cp_id=#{cpId,jdbcType=VARCHAR} AND fi.`status`=1
+    </select>
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPTrainingPlanMapper">
+
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPTrainingPlanVO">
+        select
+        id,
+        cp_id,
+        year,
+        target,
+        content,
+        creator,
+        create_time
+		from
+	    cp_training_plan
+        where
+	    id = #{id,jdbcType=VARCHAR} and state = 1
+    </select>
+
+    <select id="listCPTrainingPlan" resultType="com.inspur.vista.labor.cp.entity.CPTrainingPlanListVO">
+        select
+        id,
+        cp_id,
+        year,
+        target,
+        content,
+        creator,
+        create_time
+        from
+        cp_training_plan
+        where state = 1 and cp_id = #{cpId,jdbcType=VARCHAR}
+        <if test="year != null and year != ''">
+            AND year = #{year,jdbcType=VARCHAR}
+        </if>
+        <if test="target != null and target != ''">
+            AND target LIKE CONCAT('%', #{target,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="content != null and idcard != ''">
+            AND content LIKE CONCAT('%', #{content,jdbcType=VARCHAR}, '%')
+        </if>
+        order by create_time desc
+    </select>
+
+    <select id="selectByYear" resultType="com.inspur.vista.labor.cp.entity.CPTrainingPlanEntity">
+        select * from cp_training_plan where year = #{year,jdbcType=VARCHAR} and state = 1
+    </select>
+
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into cp_training_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="year != null">
+                year,
+            </if>
+            <if test="target != null">
+                target,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                #{target,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        update cp_training_plan
+        <set>
+            <if test="cpId != null">
+                cp_id = #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="year != null">
+                year = #{year,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                target = #{target,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            update_time = now(),
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="deleteCPTrainingPlanById">
+        update cp_training_plan
+            set state = 0,
+            modifier = #{modifier,jdbcType=VARCHAR},
+            update_time = now()
+        where
+	        id = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

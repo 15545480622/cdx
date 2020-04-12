@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPAccountMapper">
+
+    <select id="listAccount" resultType="com.inspur.vista.labor.cp.entity.CPAccountVO">
+        SELECT
+            cp_id, type, account, alipay_auth_token, active_time, failure_time
+        FROM cp_account_info
+        WHERE  cp_id = #{cpId,jdbcType=VARCHAR}
+    </select>
+    <select id="selectLastAccountByType" resultType="com.inspur.vista.labor.cp.entity.CPAccountEntity">
+        SELECT *
+        FROM cp_account_info
+        WHERE failure_time is null AND cp_id = #{cpId,jdbcType=VARCHAR} AND type = #{type,jdbcType=INTEGER}
+    </select>
+    <select id="selectEffectiveAccountByType" resultType="com.inspur.vista.labor.cp.entity.CPAccountEntity">
+        SELECT * FROM cp_account_info
+        WHERE active_time &lt;=NOW() AND (failure_time>=NOW() OR failure_time IS NULL) AND type = #{type,jdbcType=INTEGER} AND cp_id = #{cpId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO cp_account_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="sellerId != null">
+                seller_id,
+            </if>
+            <if test="alipayAuthToken != null">
+                alipay_auth_token,
+            </if>
+            <if test="activeTime != null">
+                active_time,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="sellerId != null">
+                #{sellerId,jdbcType=VARCHAR},
+            </if>
+            <if test="alipayAuthToken != null">
+                #{alipayAuthToken,jdbcType=VARCHAR},
+            </if>
+            <if test="activeTime != null">
+                #{activeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateFailureTime">
+        update cp_account_info
+        <set>
+            <if test="failureTime != null">
+                failure_time = #{failureTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="getAvailablePayWay" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(type) as types FROM cp_account_info WHERE active_time &lt;=NOW() AND (failure_time>=NOW() OR failure_time IS NULL) GROUP BY type
+    </select>
+
+
+</mapper>

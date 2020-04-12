@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.PubApplyTrackMapper">
+
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO pub_apply_track
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">
+                apply_id,
+            </if>
+            <if test="applyType != null">
+                apply_type,
+            </if>
+            <if test="handlerState != null">
+                handler_state,
+            </if>
+            <if test="handler != null">
+                handler,
+            </if>
+            <if test="handleLaborId != null">
+                handle_labor_id,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyId != null">
+                #{applyId,jdbcType=BIGINT},
+            </if>
+            <if test="applyType != null">
+                #{applyType,jdbcType=INTEGER},
+            </if>
+            <if test="handlerState != null">
+                #{handlerState,jdbcType=INTEGER},
+            </if>
+            <if test="handler != null">
+                #{handler,jdbcType=VARCHAR},
+            </if>
+            <if test="handleLaborId != null">
+                #{handleLaborId,jdbcType=VARCHAR},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

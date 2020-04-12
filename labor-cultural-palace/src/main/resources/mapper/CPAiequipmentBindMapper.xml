@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPAiequipmentBindMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPAiequipmentBindVO">
+        select
+		id as id,
+		aiequipment_id as aiequipmentId,
+		place_id as placeId,
+		location as location
+        from
+	cp_aiequipment_bind
+        where
+		id = #{id,jdbcType=VARCHAR}
+			and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+	<select id="listCPAiequipmentBind" parameterType="java.util.Map"
+			resultType="com.inspur.vista.labor.cp.entity.CPAiequipmentBindListVO">
+		select
+		a.id as id,
+		a.aiequipment_id as aiequipmentId,
+		a.place_id as placeId,
+		a.location as location
+		from
+		cp_aiequipment_bind a
+        where 1=1
+		<if test="aiequipmentId != null and aiequipmentId != ''">
+			and a.aiequipment_id = #{aiequipmentId,jdbcType=VARCHAR}
+		</if>
+		<if test="placeId != null and placeId != ''">
+			and a.place_id = #{placeId,jdbcType=VARCHAR}
+		</if>
+		<if test="location != null and location != ''">
+			and a.location = #{location,jdbcType=VARCHAR}
+		</if>
+		and a.state = 1
+		order by a.create_time desc
+    </select>
+
+	<!-- 新增-->
+	<insert id="insertSelective">
+        insert into cp_aiequipment_bind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="aiequipmentId != null">
+				aiequipment_id,
+			</if>
+			<if test="placeId != null">
+				place_id,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="aiequipmentId != null">
+				#{aiequipmentId,jdbcType=VARCHAR},
+			</if>
+			<if test="placeId != null">
+				#{placeId,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+            now(),
+        </trim>
+	</insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+		update cp_aiequipment_bind
+        <set>
+			<if test="aiequipmentId != null">
+				aiequipment_id = #{aiequipmentId,jdbcType=VARCHAR},
+			</if>
+			<if test="placeId != null">
+				place_id = #{placeId,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="modifier != null">
+				modifier = #{modifier,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+            update_time = now()
+        </set>
+        where
+		id = #{id,jdbcType=VARCHAR}
+    </update>
+
+	<!-- 单个删除-->
+	<update id="deleteCPAiequipmentBindById" parameterType="java.util.Map">
+        update cp_aiequipment_bind
+        set state = 0
+			,modifier = #{modifier,jdbcType=VARCHAR}
+			,update_time = now()
+        where
+		id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPAiequipmentBindById" parameterType="java.util.Map">
+        update cp_aiequipment_bind
+        set state = 0
+		,modifier = #{modifier,jdbcType=VARCHAR}
+		,update_time = now()
+		where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+			#{id}
+        </foreach>
+    </update>
+
+
+</mapper>

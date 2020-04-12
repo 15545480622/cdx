@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPReserveUserMapper">
+    <select id="selectByPhone" resultType="com.inspur.vista.labor.cp.entity.CPReserveUserInfoVO">
+        select
+        id,
+        reserve_id,
+        user_code,
+        user_phone
+        from
+        cp_reserve_user
+        where
+         user_phone = #{userPhone,jdbcType=VARCHAR} group by user_phone
+    </select>
+    <insert id="batchInsert">
+        INSERT INTO cp_reserve_user(
+        reserve_id,
+        user_code,
+        user_phone,
+        creator,
+        create_time,
+        remark
+        )
+        VALUES
+        <foreach collection="dataList" item="item" index="index" separator=",">
+            (
+            #{item.reserveId,jdbcType=VARCHAR},
+            #{item.userCode,jdbcType=VARCHAR},
+            #{item.userPhone,jdbcType=VARCHAR},
+            #{item.creator,jdbcType=VARCHAR},
+            now(),
+            #{item.remark,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectByReserveId" resultType="java.lang.String">
+        select
+        user_phone
+        from
+        cp_reserve_user
+        where
+         reserve_id = #{reserveId,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPAssetsInfoMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPAssetsInfoVO">
+        select id,
+        year,
+        cp_id,
+        assets,
+        net_assets,
+        debt,
+        income,
+        expenditure
+        from cp_assets_info
+        where id = #{id,jdbcType=VARCHAR}
+        and state = 1
+    </select>
+
+    <select id="selectByYearAndCPId" resultType="com.inspur.vista.labor.cp.entity.CPAssetsInfoVO">
+        select id,
+        year,
+        cp_id,
+        assets,
+        net_assets,
+        debt,
+        income,
+        expenditure
+        from cp_assets_info
+        where cp_id = #{cpId,jdbcType=VARCHAR} AND year = #{year,jdbcType=VARCHAR}
+        and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPAssets" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPAssetsInfoListVO">
+        select id,
+        year,
+        cp_id,
+        assets,
+        net_assets,
+        debt,
+        income,
+        expenditure
+        from cp_assets_info a
+        where state = 1
+        and a.cp_id = #{cpId,jdbcType=VARCHAR}
+        order by a.year desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_assets_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            year,
+            cp_id,
+            <if test="assets != null">
+                assets,
+            </if>
+            <if test="netAssets != null">
+                net_assets,
+            </if>
+            <if test="debt != null">
+                debt,
+            </if>
+            <if test="income != null">
+                income,
+            </if>
+            <if test="expenditure != null">
+                expenditure,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            #{year,jdbcType=VARCHAR},
+            #{cpId,jdbcType=VARCHAR},
+            <if test="assets != null">
+                #{assets,jdbcType=DOUBLE},
+            </if>
+            <if test="netAssets != null">
+                #{netAssets,jdbcType=DOUBLE},
+            </if>
+            <if test="debt != null">
+                #{debt,jdbcType=DOUBLE},
+            </if>
+            <if test="income != null">
+                #{income,jdbcType=DOUBLE},
+            </if>
+            <if test="expenditure != null">
+                #{expenditure,jdbcType=DOUBLE},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_assets_info
+        <set>
+            <if test="assets != null">
+                assets = #{assets,jdbcType=DOUBLE},
+            </if>
+            <if test="netAssets != null">
+                net_assets = #{netAssets,jdbcType=DOUBLE},
+            </if>
+            <if test="debt != null">
+                debt = #{debt,jdbcType=DOUBLE},
+            </if>
+            <if test="income != null">
+                income = #{income,jdbcType=DOUBLE},
+            </if>
+            <if test="expenditure != null">
+                expenditure = #{expenditure,jdbcType=DOUBLE},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+
+</mapper>

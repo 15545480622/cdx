@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    url: ${JDBC_URL:jdbc:mysql://10.221.2.77:6446/labor_cp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8}
+    username: ${JDBC_USER:labor}
+    password: ${JDBC_PASSWORD:labor654321Bb!}
+
+  redis:
+    default:
+      nodes: ${REDIS_NODES:10.221.2.77:7000,10.221.2.77:7001,10.221.2.77:7002,10.221.2.77:7003,10.221.2.77:7004,10.221.2.77:7005}
+      password: ${REDIS_PWD:inspur123}
+      timeout: ${REDIS_TIME_OUT:20000}
+      max-redirects: ${REDIS_MAX_REDIRECTS:3}
+    cache:
+      nodes: ${CACHE_REDIS_NODES:10.221.2.77:7000,10.221.2.77:7001,10.221.2.77:7002,10.221.2.77:7003,10.221.2.77:7004,10.221.2.77:7005}
+      password: ${CACHE_REDIS_PWD:inspur123}
+      timeout: ${CACHE_REDIS_TIME_OUT:20000}
+      max-redirects: ${CACHE_REDIS_MAX_REDIRECTS:3}
+
+host:
+  uac: http://117.73.3.171:88/uac
+  bsp-gateway: http://117.73.3.171:88/bsp-gateway
+  sms: http://117.73.3.171:88/sms-api
+  oss: http://117.73.3.171:88/oss
+
+vista:
+  zookeeper:
+    enabled: true
+    server: 10.221.2.77:2181,10.221.2.79:2181,10.221.2.67:2181
+    namespace: whg
+    #    digest: rt:rt                     # szkCli.sh acl 命令 addauth digest mpush
+    sessionTimeoutMs: 1000                 # 会话超时时间，单位为毫秒，默认60000ms,连接断开后，其它客户端还能请到临时节点的时间
+    connectionTimeoutMs: 6000              # 连接创建超时时间，单位为毫秒
+    maxRetries: 3                          # 最大重试次数
+    baseSleepTimeMs: 1000                  # 初始sleep时间 ,毫秒
+    waitTime: ${ZOOKEEPER_WAITTIME:120}       #  线程等待时间，默认20秒
+    drawWaitTime: ${ZOOKEEPER_DRAWWAITTIME:10}      #  抽奖活动等待时间，默认10秒
+
+logging:
+  pattern:
+    console: "%d{yyyy/MM/dd-HH:mm:ss} [%thread] %-5level %logger- %msg%n"
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.inspur: ${LOG_LEVEL:DEBUG}

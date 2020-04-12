@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.PubFilesMapper">
+
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.PubFilesVO">
+        select id,
+        bsn_id,
+        type,
+        file_name,
+        file_ext,
+        file_size,
+        file_path,
+        state
+        from pub_files
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listPubFiles" parameterType="java.util.Map" resultType="com.inspur.vista.labor.cp.entity.PubFilesVO">
+        select
+        a.id,a.bsn_id,a.type,a.file_name,a.file_ext,a.file_size,a.file_path
+        from
+        pub_files a
+        where state = 1 and bsn_id = #{bsnId,jdbcType=VARCHAR}
+        <if test="type != null and type != ''">
+            and type = #{type,jdbcType=VARCHAR}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into pub_files
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="bsnId != null">
+                bsn_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="fileExt != null">
+                file_ext,
+            </if>
+            <if test="fileSize != null">
+                file_size,
+            </if>
+            <if test="filePath != null">
+                file_path,
+            </if>
+            state,
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="bsnId != null">
+                #{bsnId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileExt != null">
+                #{fileExt,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="filePath != null">
+                #{filePath,jdbcType=VARCHAR},
+            </if>
+            1,
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now()
+        </trim>
+    </insert>
+
+    <update id="deleteFilesByBsnIdAndType">
+        update pub_files
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where bsn_id = #{bsnId,jdbcType=VARCHAR}
+        and type = #{type,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deletePubFilesById" parameterType="java.util.Map">
+        update pub_files
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeletePubFilesById" parameterType="java.util.Map">
+        update pub_files
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <delete id="deleteFilesByBsnId">
+        update pub_files
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where bsn_id = #{bsnId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="batchInsert">
+        INSERT INTO pub_files(
+        id,
+        bsn_id,
+        type,
+        file_name,
+        file_ext,
+        file_size,
+        file_path,
+        state,
+        creator,
+        create_time,
+        remark
+        )
+        VALUES
+        <foreach collection="dataList" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=VARCHAR},
+            #{item.bsnId,jdbcType=VARCHAR},
+            #{item.type,jdbcType=VARCHAR},
+            #{item.fileName,jdbcType=VARCHAR},
+            #{item.fileExt,jdbcType=VARCHAR},
+            #{item.fileSize,jdbcType=BIGINT},
+            #{item.filePath,jdbcType=VARCHAR},
+            1,
+            #{item.creator,jdbcType=VARCHAR},
+            now(),
+            #{item.remark,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <select id="listByIds" resultType="com.inspur.vista.labor.cp.entity.PubFilesVO">
+        SELECT * FROM pub_files
+        WHERE state=1 AND id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <update id="batchUpdate">
+        UPDATE pub_files
+        set bsn_id = #{bsnId,jdbcType=VARCHAR}
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPBannerMapper">
+
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPBannerVO">
+        select
+        id,
+        cp_id,
+        banner_name,
+        banner_image_url,
+        banner_link,
+        banner_order,
+        banner_desc,
+        is_show
+        from
+        cp_banner
+        where id = #{id,jdbcType = VARCHAR} and state = 1
+    </select>
+
+    <select id="listCPBanner" resultType="com.inspur.vista.labor.cp.entity.CPBannerListVO">
+        select
+        id,
+        cp_id,
+        banner_name,
+        banner_image_url,
+        banner_link,
+        banner_order,
+        banner_desc,
+        is_show
+        from
+        cp_banner
+        where state = 1 and cp_id = #{cpId,jdbcType=VARCHAR}
+        <if test="bannerName != null">
+            and banner_name like CONCAT('%', #{bannerName,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="bannerLink != null">
+            and banner_link = #{bannerLink,jdbcType=VARCHAR}
+        </if>
+        <if test="isShow != null">
+            and is_show = #{isShow,jdbcType=INTEGER}
+        </if>
+        <if test="remark != null">
+            and remark = #{remark,jdbcType=VARCHAR}
+        </if>
+        order by is_show desc,banner_order desc
+    </select>
+
+    <insert id="insertSelective">
+        insert into cp_banner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="bannerName != null">
+                banner_name,
+            </if>
+            <if test="bannerImageUrl != null">
+                banner_image_url,
+            </if>
+            <if test="bannerLink != null">
+                banner_link,
+            </if>
+                banner_order,
+            <if test="bannerDesc != null">
+                banner_desc,
+            </if>
+            is_show,
+            state,
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="select " suffix="from cp_banner" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR},
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerName != null">
+                #{bannerName,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerImageUrl != null">
+                #{bannerImageUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerLink != null">
+                #{bannerLink,jdbcType=VARCHAR},
+            </if>
+            IFNULL(MAX(banner_order),0)+1,
+            <if test="bannerDesc != null">
+                #{bannerDesc,jdbcType=VARCHAR},
+            </if>
+            0,
+            1,
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        update cp_banner
+        <set>
+            <if test="cpId != null">
+                cp_id = #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerName != null">
+                banner_name = #{bannerName,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerImageUrl != null">
+                banner_image_url = #{bannerImageUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerLink != null">
+                banner_link = #{bannerLink,jdbcType=VARCHAR},
+            </if>
+            <if test="bannerOrder != null">
+                banner_order = #{bannerOrder,jdbcType=INTEGER},
+            </if>
+            <if test="bannerDesc != null">
+                banner_desc = #{bannerDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPBanner" parameterType="java.util.Map">
+        update cp_banner
+        set state = 0,
+            modifier = #{modifier,jdbcType=VARCHAR},
+            update_time = now()
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPBanner" parameterType="java.util.Map">
+        update cp_banner
+        set state = 0,
+            modifier = #{modifier,jdbcType=VARCHAR},
+            update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <update id="updateIsShow">
+        update cp_banner
+        set is_show = #{isShow,jdbcType=INTEGER},
+            modifier = #{modifier,jdbcType=VARCHAR},
+            update_time = now()
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getNextOrPre" resultType="com.inspur.vista.labor.cp.entity.CPBannerListVO">
+        select * from cp_banner
+        where is_show = #{isShow,jdbcType=INTEGER}
+        and state = 1
+        <if test="moveType != null and moveType != '' and moveType > 0">
+            <![CDATA[
+          and banner_order > #{bannerOrder,jdbcType=INTEGER}
+          order by banner_order asc
+      ]]>
+        </if>
+        <if test="moveType != null and moveType != '' and moveType lt 0">
+            <![CDATA[
+          and banner_order < #{bannerOrder,jdbcType=INTEGER}
+          order by banner_order desc
+        ]]>
+        </if>
+        limit 1
+    </select>
+
+    <select id="listCPBannerInfo" resultType="com.inspur.vista.labor.cp.entity.CPBannerListVO">
+        select
+        id,
+        cp_id,
+        banner_name,
+        banner_image_url,
+        banner_link,
+        banner_order,
+        banner_desc,
+        is_show
+        from
+        cp_banner
+        where state = 1 and is_show = 1 and cp_id = #{cpId,jdbcType=VARCHAR}
+        order by banner_order desc
+    </select>
+
+</mapper>

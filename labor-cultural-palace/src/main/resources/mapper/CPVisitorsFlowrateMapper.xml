@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPVisitorsFlowrateMapper">
+
+    <!-- 列表(全部) -->
+    <select id="listCPVisitorsFlowrate" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPVisitorsFlowrateListVO">
+        select
+        a.id as id,
+        a.cp_id as cpId,
+        a.type as type,
+        a.collection_time as collectionTime,
+        a.creator as creator,
+        a.create_time as createTime,
+        a.remark as remark
+        from
+        cp_visitors_flowrate a
+        where a.cp_id = #{cpId,jdbcType=BIGINT}
+        <if test="type != null and type != ''">
+            AND type = #{type,jdbcType=INTEGER}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into cp_visitors_flowrate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="collectionTime != null">
+                collection_time,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cpId != null">
+                #{cpId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="collectionTime != null">
+                #{collectionTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.activity.CpActivityCouponRecordsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.inspur.vista.labor.cp.entity.activity.CpActivityCouponRecordsEntity" id="cpActivityCouponRecordsMap">
+        <result property="id" column="id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="status" column="status"/>
+        <result property="useTime" column="use_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userRealName" column="user_real_name"/>
+        <result property="userCardNum" column="user_card_num"/>
+        <result property="districtCode" column="district_code"/>
+        <result property="districtName" column="district_name"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="activityId" column="activity_id"/>
+    </resultMap>
+
+    <resultMap type="map" id="voMap">
+        <result property="id" column="id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="status" column="status"/>
+        <result property="useTime" column="use_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userRealName" column="user_real_name"/>
+        <result property="userCardNum" column="user_card_num"/>
+        <result property="districtCode" column="district_code"/>
+        <result property="districtName" column="district_name"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="activityId" column="activity_id"/>
+    </resultMap>
+
+    <select id="selectCouponByUserId" resultMap="voMap">
+
+        select
+            cacr.*,
+            cac.name,
+            cac.instruction,
+            cac.brief,
+            cac.start_time,
+            cac.end_time,
+            cac.amount,
+            cac.type,
+            cac.culture_id cultureId,
+            cac.culture_name cultureName,
+            cac.culture_logo cultureLogo,
+            cac.culture_address cultureAddress,
+            cac.culture_phone culturePhone,
+            cac.status,
+            cac.deleted,
+            cac.coupon_name couponName,
+            cac.turn
+        from cp_activity_coupon_records cacr
+        left join cp_activity_coupon cac on cacr.coupon_id = cac.id
+        where cacr.user_id = #{userId}
+        <if test="type != null and type == 0">
+            and cacr.status = 0 and cac.end_time > now()
+        </if>
+
+        <if test="type != null and type == 1">
+            and cacr.status = 1
+        </if>
+
+        <if test="type != null and type == 2">
+            and cac.end_time &lt;= now() and cac.status != 1
+        </if>
+        ORDER BY cac.create_time DESC
+    </select>
+
+    <select id="selectCurrentDayCount" resultType="int">
+        select count(1) from cp_activity_join_records
+        where activity_id = #{activityId} and user_id = #{userId}
+        and create_time &gt;= str_to_date(DATE_FORMAT(NOW(),'%Y-%m-%d'),'%Y-%m-%d %H:%i:%s')
+    </select>
+
+    <select id="scanTicketActivityList" resultType="java.util.Map">
+        SELECT
+            cab.title,
+            cab.type,
+            cab.cp_id cpId,
+            cab.id,
+            cab.start_time startTime,
+            cab.end_time endTime
+        FROM
+            cp_activity_base cab
+        WHERE
+            cab.type = 'tickets' AND cab.cp_id = #{cpId}
+            AND EXISTS ( SELECT * FROM cp_activity_coupon_records cajr WHERE cajr.activity_id = cab.id AND cajr.status = 1 )
+        ORDER BY cab.create_time desc
+    </select>
+
+    <select id="scanJoinDetailsActivityList" resultType="map">
+        select
+            cajr.activity_id activityId,
+            cajr.user_id userId,
+            cajr.user_name userName,
+            cajr.user_phone userPhone,
+            cajr.status isUse,
+            cajr.scan_user_id scanUserId,
+            cajr.use_time scanTime
+        from cp_activity_coupon_records cajr
+        where cajr.activity_id = #{activityId} and cajr.status = 1
+        order by cajr.use_time desc
+    </select>
+
+    <select id="selectRecordsByActivityId" resultMap="voMap">
+        select * from cp_activity_coupon_records cajr
+        where cajr.activity_id = #{id}
+        <if test="laborId != null and laborId != ''">
+            and cajr.labor_id = #{laborId}
+        </if>
+        <if test="userName != null and userName != ''">
+            and cajr.user_name like concat('%', #{userName}, '%')
+        </if>
+        order by cajr.create_time desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPReserveInfoMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPReserveInfoVO">
+        select a.id,
+               a.cp_id,
+               court_id,
+               user_code,
+               user_name,
+               user_phone,
+               a.labor_id,
+               labor_name,
+               a.type,
+               person_num,
+               reserve_money,
+               use_money,
+               a.state,
+               cancel_time,
+               cancel_reason_type,
+               cancel_reason_ext,
+               order_id,
+               a.create_time,
+               out_trade_no,
+               order_record.state as pay_state,
+               order_record.pay_type,
+               court.name         as court_name,
+               cp.name            as cp_name
+        from cp_reserve_info a
+                 LEFT JOIN cp_order_record order_record ON order_record.id = a.order_id
+                 LEFT JOIN cp_court_info court on court.id = a.court_id
+                 LEFT JOIN cp_info cp on cp.id = a.cp_id
+        where a.id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPReserveInfo" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPReserveInfoListVO">
+        SELECT
+        a.id,a.out_trade_no,a.user_code,user_name,a.user_phone,a.labor_id,labor_name,a.type,person_num,reserve_money,use_money,a.state,cancel_time,
+        order_id,a.create_time,court.name AS court_name,cp.name AS cp_name,(a.reserve_money+a.use_money) as pay_money,
+        case when ev.id is null then 0 else 1 end as is_evaluate
+        FROM cp_reserve_info a
+        LEFT JOIN cp_court_info court ON court.id=a.court_id
+        LEFT JOIN cp_info cp ON cp.id=a.cp_id
+        LEFT JOIN cp_evaluation ev on ev.reserve_id=a.id
+        WHERE 1=1
+        <if test="userCode != null and userCode != ''">
+            and a.user_code = #{userCode,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null and userName != ''">
+            and a.user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="userPhone != null and userPhone != ''">
+            and a.user_phone = #{userPhone,jdbcType=VARCHAR}
+        </if>
+        <if test="laborId != null and laborId != ''">
+            and a.labor_id = #{laborId,jdbcType=VARCHAR}
+        </if>
+        <if test="type != null and type != ''">
+            and a.type = #{type,jdbcType=VARCHAR}
+        </if>
+        <if test="courtId != null and courtId != ''">
+            and a.court_id = #{courtId,jdbcType=VARCHAR}
+        </if>
+        <if test="state != null and state != ''">
+            and a.state = #{state,jdbcType=INTEGER}
+        </if>
+        <if test="placeId != null and placeId != ''">
+            and court.place_id = #{placeId,jdbcType=VARCHAR}
+        </if>
+        <if test="currentDay != null and currentDay != ''">
+            and date(a.create_time) = #{currentDay,jdbcType=VARCHAR}
+        </if>
+        <if test="cpId != null and cpId != ''">
+            and a.cp_id = #{cpId,jdbcType=VARCHAR}
+        </if>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="listCPReserveInfoByScene" resultType="com.inspur.vista.labor.cp.entity.CPReserveInfoListVO">
+        SELECT ri.*
+        FROM cp_reserve_scene rs
+                 LEFT JOIN cp_reserve_info ri ON rs.reserve_id = ri.id
+        WHERE rs.begin_time = #{sceneBeginTime,jdbcType=VARCHAR}
+          AND rs.end_time = #{sceneEndTime,jdbcType=VARCHAR}
+          AND ri.court_id = #{courtId,jdbcType=VARCHAR}
+    </select>
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_reserve_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="courtId != null">
+                court_id,
+            </if>
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="outTradeNo != null">
+                out_trade_no,
+            </if>
+            <if test="userCode != null">
+                user_code,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userPhone != null">
+                user_phone,
+            </if>
+            <if test="laborId != null">
+                labor_id,
+            </if>
+            <if test="laborName != null">
+                labor_name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="personNum != null">
+                person_num,
+            </if>
+            <if test="reserveMoney != null">
+                reserve_money,
+            </if>
+            <if test="userMoney != null">
+                use_money,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="courtId != null">
+                #{courtId,jdbcType=VARCHAR},
+            </if>
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="outTradeNo != null">
+                #{outTradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null">
+                #{userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPhone != null">
+                #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="laborId != null">
+                #{laborId,jdbcType=VARCHAR},
+            </if>
+            <if test="laborName != null">
+                #{laborName,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="personNum != null">
+                #{personNum,jdbcType=INTEGER},
+            </if>
+            <if test="reserveMoney != null">
+                #{reserveMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="userMoney != null">
+                #{userMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_reserve_info
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPhone != null">
+                user_phone = #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="laborId != null">
+                labor_id = #{laborId,jdbcType=VARCHAR},
+            </if>
+            <if test="laborName!= null">
+                labor_name = #{laborName,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="personNum != null">
+                person_num = #{personNum,jdbcType=INTEGER},
+            </if>
+            <if test="reserveMoney != null">
+                reserve_money = #{reserveMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="userMoney != null">
+                use_money = #{userMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="cancelTime != null">
+                cancel_time = #{cancelTime,jdbcType=DATE},
+            </if>
+            <if test="cancelReasonType != null">
+                cancel_reason_type = #{cancelReasonType,jdbcType=INTEGER},
+            </if>
+            <if test="cancelReasonExt != null">
+                cancel_reason_ext = #{cancelReasonExt,jdbcType=VARCHAR},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPReserveInfoById" parameterType="java.util.Map">
+        update cp_reserve_info
+        set state       = 0
+          , modifier    = #{modifier,jdbcType=VARCHAR}
+          , update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPReserveInfoById" parameterType="java.util.Map">
+        update cp_reserve_info
+        set state = 0
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <select id="selectIdByOutTradeNo" resultType="java.lang.String">
+        SELECT id
+        FROM cp_reserve_info
+        WHERE out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

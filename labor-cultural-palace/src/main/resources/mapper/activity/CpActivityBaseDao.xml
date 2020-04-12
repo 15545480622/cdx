@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.activity.CpActivityBaseDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.inspur.vista.labor.cp.entity.activity.CpActivityBaseEntity" id="cpActivityBaseMap">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="isTop" column="is_top"/>
+        <result property="isGroup" column="is_group"/>
+        <result property="cpId" column="cp_id"/>
+        <result property="status" column="status"/>
+        <result property="releaseStatus" column="release_status"/>
+        <result property="useRange" column="use_range"/>
+        <result property="level" column="level"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="countLimit" column="count_limit"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="link" column="link"/>
+        <result property="laborCode" column="labor_code"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="laborType" column="labor_type"/>
+        <result property="placeId" column="place_id"/>
+        <result property="visitation" column="visitation"/>
+        <result property="commonQuantity" column="common_quantity"/>
+        <result property="praisePoints" column="praise_points"/>
+        <result property="deleted" column="deleted"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="path" column="path"/>
+        <result property="condition" column="condition"/>
+        <result property="takeCount" column="take_count"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponCount" column="coupon_count"/>
+        <result property="displayType" column="display_type"/>
+        <result property="winningRate" column="winning_rate"/>
+    </resultMap>
+    <resultMap type="map" id="voMapForAdmin">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="isTop" column="is_top"/>
+        <result property="isGroup" column="is_group"/>
+        <result property="cpId" column="cp_id"/>
+        <result property="status" column="status"/>
+        <result property="releaseStatus" column="release_status"/>
+        <result property="useRange" column="use_range"/>
+        <result property="level" column="level"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="countLimit" column="count_limit"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="link" column="link"/>
+        <result property="laborCode" column="labor_code"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="laborType" column="labor_type"/>
+        <result property="placeId" column="place_id"/>
+        <result property="placeName" column="place_name"/>
+        <result property="visitation" column="visitation"/>
+        <result property="commonQuantity" column="common_quantity"/>
+        <result property="praisePoints" column="praise_points"/>
+        <result property="deleted" column="deleted"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="path" column="path"/>
+        <result property="cpName" column="cp_name"/>
+        <result property="condition" column="condition"/>
+        <result property="takeCount" column="take_count"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponCount" column="coupon_count"/>
+        <result property="displayType" column="display_type"/>
+        <result property="winningRate" column="winning_rate"/>
+    </resultMap>
+    <resultMap type="map" id="voMapForApp">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="isTop" column="is_top"/>
+        <result property="isTop" column="is_start"/>
+        <result property="isGroup" column="is_group"/>
+        <result property="cpId" column="cp_id"/>
+        <result property="status" column="status"/>
+        <result property="releaseStatus" column="release_status"/>
+        <result property="useRange" column="use_range"/>
+        <result property="level" column="level"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="countLimit" column="count_limit"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="link" column="link"/>
+        <result property="laborCode" column="labor_code"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="laborType" column="labor_type"/>
+        <result property="specifyLaborId" column="specify_labor_id"/>
+        <result property="specifyLaborName" column="specify_labor_name"/>
+        <result property="specifyLaborCode" column="specify_labor_code"/>
+        <result property="placeId" column="place_id"/>
+        <result property="placeName" column="place_name"/>
+        <result property="visitation" column="visitation"/>
+        <result property="commonQuantity" column="common_quantity"/>
+        <result property="praisePoints" column="praise_points"/>
+        <result property="deleted" column="deleted"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="path" column="path"/>
+        <result property="cpName" column="cp_name"/>
+        <result property="isStart" column="is_start"/>
+        <result property="condition" column="condition"/>
+        <result property="takeCount" column="take_count"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponCount" column="coupon_count"/>
+        <result property="displayType" column="display_type"/>
+        <result property="winningRate" column="winning_rate"/>
+    </resultMap>
+
+    <select id="queryPage" resultMap="voMapForAdmin">
+        select cab.*, cio.name cp_name, cpo.name place_name from cp_activity_base cab
+        left join cp_info cio on cab.cp_id = cio.id
+        left join cp_place_info cpo on cpo.id = cab.place_id
+        <where>
+            cab.deleted = 0
+            <if test="title != null and title != ''">
+                and cab.title like concat("%", #{title}, "%")
+            </if>
+            <if test="status != null and status != '' and status == '0'.toString() ">
+                and (cab.status = 0 or cab.status = 2)
+            </if>
+            <if test="status != null and status != '' and status != '0'.toString() ">
+                and cab.status = #{status}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and cab.start_time &gt; #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and cab.end_time &lt;= #{endTime}
+            </if>
+            <if test="releaseStatus != null and releaseStatus != ''">
+                and cab.release_status = #{releaseStatus}
+            </if>
+            <if test="type != null and type != ''">
+                and cab.type = #{type}
+            </if>
+            <if test="laborId != null and laborId != ''">
+                and cab.labor_id = #{laborId}
+            </if>
+        </where>
+        order by cab.is_top desc, cab.create_time desc
+    </select>
+
+    <select id="selectListForApp" resultMap="voMapForApp">
+        select
+            cab.*, cio.name cp_name, cpo.name place_name,
+            case when now() &gt;= cab.start_time and now() &lt;= cab.end_time then 1
+                 when now() &lt; cab.start_time then 0
+                 when now() &gt; cab.end_time then 2 end is_start
+        from cp_activity_base cab
+        left join cp_info cio on cab.cp_id = cio.id
+        left join cp_place_info cpo on cpo.id = cab.place_id
+        <where>
+            cab.deleted = 0 and status = 1
+            /*排除团体报名*/
+                and cab.is_group = 0
+            <if test="isStart != null and isStart == '0'.toString()">
+                and now() &lt; cab.start_time
+            </if>
+            <if test="isStart != null and isStart == '1'.toString()">
+                and now() &gt;= cab.start_time and now() &lt;= cab.end_time
+            </if>
+            <if test="isStart != null and isStart == '2'.toString()">
+                and now() &gt; cab.end_time
+            </if>
+            <if test="cpId != null and cpId != ''">
+                and cab.cp_id = #{cpId}
+            </if>
+        </where>
+        order by cab.is_top desc, create_time desc
+    </select>
+
+    <select id="selectMyListForApp" resultMap="voMapForApp">
+        SELECT
+        DISTINCT
+        cab.*,
+        cio.`name` cp_name,
+        cpo.`name` place_name,
+        case when now() &gt;= cab.start_time and now() &lt;= cab.end_time then 1
+             when now() &lt; cab.start_time then 0
+             when now() &gt; cab.end_time then 2 end is_start
+        FROM cp_activity_base cab
+        LEFT JOIN cp_activity_join_records cajr ON cajr.activity_id = cab.id AND cajr.user_id = #{userId}
+        LEFT JOIN cp_activity_coupon_records cacr ON cacr.activity_id = cab.id AND cacr.user_id = #{userId}
+        LEFT JOIN cp_info cio ON cab.cp_id = cio.id
+        LEFT JOIN cp_place_info cpo ON cpo.id = cab.place_id
+        WHERE (cajr.id IS NOT NULL OR cacr.id IS NOT NULL)
+        AND cab.deleted = 0 and cab.status = 1
+        <if test="isStart != null and isStart == '0'.toString()">
+            and now() &lt; cab.start_time
+        </if>
+        <if test="isStart != null and isStart == '1'.toString()">
+            and now() &gt;= cab.start_time and now() &lt;= cab.end_time
+        </if>
+        <if test="isStart != null and isStart == '2'.toString()">
+            and now() &gt; cab.end_time
+        </if>
+        order by cab.create_time desc
+    </select>
+
+    <select id="scanJoinActivityList" resultType="map">
+        SELECT
+            cab.title,
+            cab.type,
+            cab.cp_id cpId,
+            cab.id,
+            date_format(cab.start_time, '%Y-%m-%d %H:%i:%s') startTime,
+            date_format(cab.end_time, '%Y-%m-%d %H:%i:%s') endTime
+        FROM
+            cp_activity_base cab
+        WHERE
+            cab.type = 'join' AND cab.cp_id = #{cpId}
+            AND EXISTS
+            ( SELECT * FROM cp_activity_join_records cajr WHERE cajr.activity_id = cab.id AND cajr.is_use = 1 AND cajr.scan_user_id is not null )
+        ORDER BY cab.create_time desc
+    </select>
+
+    <select id="groupJoinList" resultMap="voMapForAdmin">
+        select cab.*, cio.name cp_name, cpo.name place_name from cp_activity_base cab
+        left join cp_info cio on cab.cp_id = cio.id
+        left join cp_place_info cpo on cpo.id = cab.place_id
+        <where>
+            cab.deleted = 0 and cab.status = 1 and cab.type = 'join'
+            and cab.is_group = 1 and cab.specify_labor_id = #{laborId}
+            <if test="title != null and title != ''">
+                and cab.title like concat("%", #{title}, "%")
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and cab.start_time &gt; #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and cab.end_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by cab.is_top desc, cab.create_time desc
+    </select>
+
+    <insert id="insertSpecifyOrgan">
+        insert into cp_activity_specify_organ
+        (activity_id,
+        specify_labor_id,
+        specify_labor_code,
+        specify_labor_name,
+        specify_labor_path)
+        value
+        <foreach collection="list" separator="," item="item">
+            (#{item.activityId}, #{item.specifyLaborId}, #{item.specifyLaborCode},
+            #{item.specifyLaborName}, #{item.specifyLaborPath})
+        </foreach>
+    </insert>
+
+    <delete id="deleteSpecifyByActivityId">
+        delete from cp_activity_specify_organ where activity_id = #{activityId}
+    </delete>
+
+    <select id="selectSpecifyOrganIdList" resultType="string">
+        select specify_labor_id from cp_activity_specify_organ where activity_id = #{activityId}
+    </select>
+    <select id="selectSpecifyOrganList"
+            resultType="com.inspur.vista.labor.cp.entity.activity.CpActivitySpecifyOrganEntity">
+        select
+            activity_id activityId,
+            specify_labor_id specifyLaborId,
+            specify_labor_code specifyLaborCode,
+            specify_labor_name specifyLaborName,
+            specify_labor_path specifyLaborPath
+        from cp_activity_specify_organ where activity_id = #{activityId}
+
+    </select>
+    <select id="querySpecifyOrgansByActivityId"
+            resultType="com.inspur.vista.labor.cp.entity.activity.CpActivitySpecifyOrganEntity">
+
+        select
+            caso.id id,
+            caso.activity_id activityId,
+            caso.specify_labor_id specifyLaborId,
+            caso.specify_labor_code specifyLaborPode,
+            caso.specify_labor_name specifyLaborName,
+            caso.specify_labor_path specifyLaborPath
+        from cp_activity_specify_organ caso
+        where activity_id = #{id}
+
+    </select>
+    <select id="selectByActivityId" resultMap="voMapForApp">
+        select * from cp_activity_base cab where cab.id = #{id}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.activity.CpActivityDrawRecordsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.inspur.vista.labor.cp.entity.activity.CpActivityDrawRecordsEntity" id="cpActivityDrawRecordsMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="districtCode" column="district_code"/>
+        <result property="districtName" column="district_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap type="map" id="voMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="laborId" column="labor_id"/>
+        <result property="laborName" column="labor_name"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="districtCode" column="district_code"/>
+        <result property="districtName" column="district_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="selectCurrentDayCount" resultType="int">
+        select count(1) from cp_activity_draw_records
+        where activity_id = #{activityId} and user_id = #{userId}
+        and create_time &gt;= str_to_date(DATE_FORMAT(NOW(),'%Y-%m-%d'),'%Y-%m-%d %H:%i:%s')
+    </select>
+
+    <select id="selectWinRecords" resultMap="voMap">
+        select
+            cadr.*,
+            cag.name
+        from
+        cp_activity_draw_records cadr
+        join cp_activity_goods cag on cadr.goods_id = cag.id
+        where cadr.activity_id = #{id}
+        order by cadr.create_time desc
+    </select>
+
+    <select id="drawRecordPage" resultMap="voMap">
+        select
+            cadr.*,
+            cag.name
+        from cp_activity_draw_records cadr
+        left join cp_activity_goods cag on cadr.goods_id = cag.id
+        where cadr.activity_id = #{id}
+        <if test="laborId != null and laborId != ''">
+            and cadr.labor_id = #{laborId}
+        </if>
+        <if test="userName != null and userName != ''">
+            and cadr.user_name like concat('%', #{userName}, '%')
+        </if>
+        order by create_time desc
+    </select>
+
+
+</mapper>

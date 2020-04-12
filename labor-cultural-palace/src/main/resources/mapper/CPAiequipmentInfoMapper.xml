@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPAiequipmentInfoMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPAiequipmentInfoVO">
+        select id            as id,
+               cp_id         as cpId,
+               firm          as firm,
+               serial_number as serialNumber,
+               code          as code,
+               version       as version,
+               name          as name,
+               type          as type,
+               location      as location,
+               note          as note
+        from cp_aiequipment_info
+        where id = #{id,jdbcType=VARCHAR}
+          and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPAiequipmentInfo" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPAiequipmentInfoListVO">
+        select a.id            as id,
+               a.cp_id         as cpId,
+               a.firm          as firm,
+               a.serial_number as serialNumber,
+               a.code          as code,
+               a.version       as version,
+               a.name          as name,
+               a.type          as type,
+               a.location      as location,
+               a.note          as note
+        from cp_aiequipment_info a
+        where a.cp_id = #{cpId,jdbcType=VARCHAR}
+          and a.state = 1
+        order by a.create_time desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_aiequipment_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="firm != null">
+                firm,
+            </if>
+            <if test="serialNumber != null">
+                serial_number,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="location != null">
+                location,
+            </if>
+            <if test="note != null">
+                note,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="firm != null">
+                #{firm,jdbcType=BIGINT},
+            </if>
+            <if test="serialNumber != null">
+                #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="location != null">
+                #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_aiequipment_info
+        <set>
+            <if test="cpId != null">
+                cp_id = #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="firm != null">
+                firm = #{firm,jdbcType=BIGINT},
+            </if>
+            <if test="serialNumber != null">
+                serial_number = #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="location != null">
+                location = #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                note = #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPAiequipmentInfoById" parameterType="java.util.Map">
+        update cp_aiequipment_info
+        set state       = 0
+          , modifier    = #{modifier,jdbcType=VARCHAR}
+          , update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPAiequipmentInfoById" parameterType="java.util.Map">
+        update cp_aiequipment_info
+        set state = 0
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

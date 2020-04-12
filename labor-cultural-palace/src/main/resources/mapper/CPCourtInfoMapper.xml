@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPCourtInfoMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPCourtInfoVO">
+        select
+		id as id,
+		place_id as placeId,
+		name as name,
+		court_code as courtCode,
+		type as type,
+        can_reserve,
+        include_holidays as includeHolidays,
+		include_weekend as includeWeekend,
+		minimum_hire_hour as minimumHireHour,
+		morning_start_time as morningStartTime,
+		morning_end_time as morningEndTime,
+		afternoon_start_time as afternoonStartTime,
+		afternoon_end_time as afternoonEndTime,
+		evening_start_time as eveningStartTime,
+		evening_end_time as eveningEndTime,
+        reserve_type,
+        reserve_capacity,
+		is_enable as isEnable
+        from
+	cp_court_info
+        where
+	id = #{id,jdbcType=VARCHAR}
+			and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPCourtInfo" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPCourtInfoListVO">
+        SELECT
+        a.*,
+        IFNULL(b.reservedNumber,0) as reservedNumber
+        FROM
+        (
+        SELECT
+        court.id AS id,
+        court.place_id AS placeId,
+        court.name AS name,
+        court.court_code AS courtCode,
+        court.type AS TYPE,
+        court.can_reserve as canReserve,
+        item.item_value AS projectName,
+        court.is_enable AS isEnable,
+        court.state AS state,
+        court.morning_start_time,
+        court.morning_end_time,
+        court.afternoon_start_time,
+        court.afternoon_end_time,
+        court.evening_start_time,
+        court.evening_end_time,
+        court.create_time
+        FROM
+        cp_court_info court
+        LEFT JOIN pub_dict_item item ON court.type = item.item_code
+        INNER JOIN cp_place_info place ON place.id=court.place_id
+        LEFT JOIN cp_info cp ON cp.id=place.cp_id
+        WHERE court.state = 1 and place.state = 1
+        <if test="placeId != null and placeId != ''">
+            and court.place_id = #{placeId,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name != ''">
+            and court.name like CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="courtCode != null and courtCode != ''">
+            and court.court_code = #{courtCode,jdbcType=VARCHAR}
+        </if>
+        <if test="type != null and type != ''">
+            and court.type like CONCAT(#{type,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="isEnable != null and isEnable != ''">
+            and court.is_enable = #{isEnable,jdbcType=INTEGER}
+        </if>
+        <if test="cpId != null and cpId != ''">
+            and cp.id = #{cpId,jdbcType=VARCHAR}
+        </if>) a
+        LEFT JOIN(
+        SELECT court_id, COUNT(*) AS reservedNumber
+        FROM cp_reserve_info
+        WHERE state = 1
+        GROUP BY court_id) b ON a.id = b.court_id
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listCanReserveCPCourtInfo" resultType="com.inspur.vista.labor.cp.entity.CPCourtInfoListVO">
+        SELECT
+        a.*,
+        IFNULL(b.reservedNumber,0) as reservedNumber
+        FROM
+        (
+        SELECT
+        court.id AS id,
+        court.place_id AS placeId,
+        court.name AS name,
+        court.court_code AS courtCode,
+        court.type AS TYPE,
+        item.item_value AS projectName,
+        court.is_enable AS isEnable,
+        court.state AS state,
+        court.morning_start_time,
+        court.morning_end_time,
+        court.afternoon_start_time,
+        court.afternoon_end_time,
+        court.evening_start_time,
+        court.evening_end_time,
+        court.create_time
+        FROM
+        cp_court_info court
+        LEFT JOIN pub_dict_item item ON court.type = item.item_code
+        INNER JOIN cp_place_info place ON place.id=court.place_id
+        LEFT JOIN cp_info cp ON cp.id=place.cp_id
+        WHERE court.state = 1 and place.state = 1 and court.can_reserve = 1
+        and court.is_enable = 1
+        <if test="placeId != null and placeId != ''">
+            and court.place_id = #{placeId,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null and name != ''">
+            and court.name like CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="courtCode != null and courtCode != ''">
+            and court.court_code = #{courtCode,jdbcType=VARCHAR}
+        </if>
+        <if test="type != null and type != ''">
+            and court.type like CONCAT(#{type,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="cpId != null and cpId != ''">
+            and cp.id = #{cpId,jdbcType=VARCHAR}
+        </if>) a
+        LEFT JOIN(
+        SELECT court_id, COUNT(*) AS reservedNumber
+        FROM cp_reserve_info
+        WHERE state = 1
+        GROUP BY court_id) b ON a.id = b.court_id
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getCpIdByCourtId" resultType="java.lang.String">
+        SELECT place.cp_id FROM cp_court_info court,cp_place_info place
+        WHERE place.id=court.place_id and court.id = #{courtId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_court_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="placeId != null">
+                place_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="courtCode != null">
+                court_code,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="canReserve != null">
+                can_reserve,
+            </if>
+            <if test="includeHolidays != null">
+                include_holidays,
+            </if>
+            <if test="includeWeekend != null">
+                include_weekend,
+            </if>
+            <if test="minimumHireHour != null">
+                minimum_hire_hour,
+            </if>
+            <if test="morningStartTime != null">
+                morning_start_time,
+            </if>
+            <if test="morningEndTime != null">
+                morning_end_time,
+            </if>
+            <if test="afternoonStartTime != null">
+                afternoon_start_time,
+            </if>
+            <if test="afternoonEndTime != null">
+                afternoon_end_time,
+            </if>
+            <if test="eveningStartTime != null">
+                evening_start_time,
+            </if>
+            <if test="eveningEndTime != null">
+                evening_end_time,
+            </if>
+            <if test="reserveType != null">
+                reserve_type,
+            </if>
+            <if test="reserveCapacity != null">
+                reserve_capacity,
+            </if>
+            <if test="isEnable != null">
+                is_enable,
+            </if>
+            state,
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="placeId != null">
+                #{placeId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="courtCode != null">
+                #{courtCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="canReserve != null">
+                #{canReserve,jdbcType=INTEGER},
+            </if>
+            <if test="includeHolidays != null">
+                #{includeHolidays,jdbcType=INTEGER},
+            </if>
+            <if test="includeWeekend != null">
+                #{includeWeekend,jdbcType=INTEGER},
+            </if>
+            <if test="minimumHireHour != null">
+                #{minimumHireHour,jdbcType=DOUBLE},
+            </if>
+            <if test="morningStartTime != null">
+                #{morningStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="morningEndTime != null">
+                #{morningEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="afternoonStartTime != null">
+                #{afternoonStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="afternoonEndTime != null">
+                #{afternoonEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eveningStartTime != null">
+                #{eveningStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eveningEndTime != null">
+                #{eveningEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reserveType != null">
+                #{reserveType,jdbcType=INTEGER},
+            </if>
+            <if test="reserveCapacity != null">
+                #{reserveCapacity,jdbcType=INTEGER},
+            </if>
+            <if test="isEnable != null">
+                #{isEnable,jdbcType=INTEGER},
+            </if>
+            1,
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_court_info
+        <set>
+            <if test="placeId != null">
+                place_id = #{placeId,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="courtCode != null">
+                court_code = #{courtCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="canReserve != null">
+                can_reserve = #{canReserve,jdbcType=VARCHAR},
+            </if>
+            <if test="includeHolidays != null">
+                include_holidays = #{includeHolidays,jdbcType=INTEGER},
+            </if>
+            <if test="includeWeekend != null">
+                include_weekend = #{includeWeekend,jdbcType=INTEGER},
+            </if>
+            <if test="minimumHireHour != null">
+                minimum_hire_hour = #{minimumHireHour,jdbcType=DOUBLE},
+            </if>
+            <if test="morningStartTime != null">
+                morning_start_time = #{morningStartTime,jdbcType=DATE},
+            </if>
+            <if test="morningEndTime != null">
+                morning_end_time = #{morningEndTime,jdbcType=DATE},
+            </if>
+            <if test="afternoonStartTime != null">
+                afternoon_start_time = #{afternoonStartTime,jdbcType=DATE},
+            </if>
+            <if test="afternoonEndTime != null">
+                afternoon_end_time = #{afternoonEndTime,jdbcType=DATE},
+            </if>
+            <if test="eveningStartTime != null">
+                evening_start_time = #{eveningStartTime,jdbcType=DATE},
+            </if>
+            <if test="eveningEndTime != null">
+                evening_end_time = #{eveningEndTime,jdbcType=DATE},
+            </if>
+            <if test="reserveType != null">
+                reserve_type = #{reserveType,jdbcType=INTEGER},
+            </if>
+            <if test="reserveCapacity != null">
+                reserve_capacity = #{reserveCapacity,jdbcType=INTEGER},
+            </if>
+            <if test="isEnable != null">
+                is_enable = #{isEnable,jdbcType=INTEGER},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除-->
+    <update id="deleteCPCourtInfoById" parameterType="java.util.Map">
+        update cp_court_info
+        set state = 0
+			,modifier = #{modifier,jdbcType=VARCHAR}
+			,update_time = now()
+        where
+		id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--批量删除-->
+    <update id="batchDeleteCPCourtInfoById" parameterType="java.util.Map">
+        update cp_court_info
+        set state = 0
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="enableCourt">
+        update cp_court_info
+        set is_enable = 1
+        ,modifier = #{modifier,jdbcType=VARCHAR}
+        ,update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

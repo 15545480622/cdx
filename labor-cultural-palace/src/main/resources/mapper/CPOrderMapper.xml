@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPOrderMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPOrderVO">
+        select
+		id,
+		trade_no,
+		pay_type,
+		receiving_account,
+		pay_account,
+		pay_time,
+		pay_money,
+		refund_time,
+		refund_money,
+		state
+        from
+	cp_order_record
+        where
+	id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPOrderInfo" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPOrderListVO">
+       select
+		id,
+		trade_no,
+		pay_type,
+		receiving_account,
+		pay_account,
+		pay_time,
+		pay_money,
+		refund_time,
+		refund_money,
+		state
+        from
+	cp_order_record
+        where
+        1=1
+        <if test="tradeNo != null and tradeNo != ''">
+            and trade_no = #{tradeNo,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_order_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="tradeNo != null">
+                trade_no,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="receivingAccount != null">
+                receiving_account,
+            </if>
+            <if test="payAccount != null">
+                pay_account,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="payMoney != null">
+                pay_money,
+            </if>
+            <if test="refundTime != null">
+                refund_time,
+            </if>
+            <if test="refundMoney != null">
+                refund_money,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeNo != null">
+                #{tradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=INTEGER},
+            </if>
+            <if test="receivingAccount != null">
+                #{receivingAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="payAccount != null">
+                #{payAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payMoney != null">
+                #{payMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="refundTime != null">
+                #{refundTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="refundMoney != null">
+                #{refundMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective">
+        update cp_order_record
+        <set>
+            <if test="tradeNo != null">
+                trade_no = #{tradeNo,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null">
+                pay_type = #{payType,jdbcType=INTEGER},
+            </if>
+            <if test="receivingAccount != null">
+                receiving_account = #{receivingAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="payAccount != null">
+                pay_account = #{payAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payMoney != null">
+                pay_money = #{payMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="refundTime != null">
+                refund_time = #{refundTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="refundMoney != null">
+                refund_money = #{refundMoney,jdbcType=DECIMAL},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=INTEGER},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            update_time = now()
+        </set>
+        where
+        id = #{id,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

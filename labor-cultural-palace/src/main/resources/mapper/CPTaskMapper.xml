@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPTaskMapper">
+
+    <!-- 通过ID获取数据 -->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPTaskVO">
+        select
+        bsn_id,task_type,task_name,handle_organ,handler
+        from
+        cp_task
+        where bsn_id = #{bsnId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPTask" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPTaskListVO">
+        SELECT fi.bsn_id,fi.bsn_type,bsn_desc AS task_name,
+        staff.name AS submitter,cp.name AS cp_name
+        FROM flow_task task
+        LEFT JOIN flow_tpl_instance fi ON fi.id=task.inst_id
+        LEFT JOIN flow_tpl_node fn ON fn.id=task.tpl_node
+        LEFT JOIN cp_staff_info staff ON staff.manager_username=fi.starter
+        LEFT JOIN cp_info cp ON cp.id=staff.cp_id
+        WHERE task.assign_user = #{handler,jdbcType=VARCHAR}
+        OR task.assign_organ = #{handlerLaborId,jdbcType=VARCHAR}
+        OR task.assign_role = #{handlerRole,jdbcType=VARCHAR}
+        GROUP BY fi.bsn_id,fi.bsn_type,bsn_desc,staff.name,cp.name
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsnId != null">
+                bsn_id,
+            </if>
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="taskName != null">
+                task_name,
+            </if>
+            <if test="handleOrgan != null">
+                handle_organ,
+            </if>
+            <if test="handler != null">
+                handler,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsnId != null">
+                #{bsnId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskType != null">
+                #{taskType,jdbcType=INTEGER},
+            </if>
+            <if test="taskName != null">
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleOrgan != null">
+                #{handleOrgan,jdbcType=VARCHAR},
+            </if>
+            <if test="handler != null">
+                #{handler,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+    <delete id="deleteTaskById">
+        DELETE FROM cp_task WHERE bsn_id = #{bsnId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertHisSelective">
+        insert into cp_task_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test=" id!= null">
+                id,
+            </if>
+            <if test="bsnId != null">
+                bsn_id,
+            </if>
+            <if test="taskType != null">
+                task_type,
+            </if>
+            <if test="taskName != null">
+                task_name,
+            </if>
+            <if test="handleOrgan != null">
+                handle_organ,
+            </if>
+            <if test="handler != null">
+                handler,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="bsnId != null">
+                #{bsnId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskType != null">
+                #{taskType,jdbcType=INTEGER},
+            </if>
+            <if test="taskName != null">
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleOrgan != null">
+                #{handleOrgan,jdbcType=VARCHAR},
+            </if>
+            <if test="handler != null">
+                #{handler,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+</mapper>

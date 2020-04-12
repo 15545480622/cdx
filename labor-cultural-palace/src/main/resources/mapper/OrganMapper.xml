@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.OrganMapper">
+
+    <select id="selectByOrganId" resultType="com.inspur.vista.labor.cp.entity.OrganEntity">
+		SELECT * FROM pub.organ
+		WHERE ORGAN_ID = #{organId,jdbcType=VARCHAR} AND in_use = 1
+	</select>
+
+    <select id="selectByStruId" resultType="com.inspur.vista.labor.cp.entity.OrganEntity">
+        SELECT * FROM pub.organ
+		WHERE STRU_ID = #{struId,jdbcType=VARCHAR} AND in_use = 1
+    </select>
+
+    <select id="listByStruPathLike" resultType="com.inspur.vista.labor.cp.entity.OrganEntity">
+        SELECT * FROM pub.organ
+        WHERE STRU_PATH LIKE CONCAT(#{struPath,jdbcType=VARCHAR}, '%') AND in_use = 1
+        <if test="level != null and level != ''">
+            AND STRU_LEVEL = #{level,jdbcType=INTEGER}
+        </if>
+        ORDER BY STRU_ORDER ASC
+    </select>
+
+    <select id="listByStruPath" resultType="com.inspur.vista.labor.cp.entity.OrganEntity">
+        SELECT * FROM pub.organ
+		WHERE STRU_PATH = #{struPath,jdbcType=VARCHAR} AND in_use = 1
+    </select>
+
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPEvaluationMapper">
+
+    <!-- 列表(全部) -->
+    <select id="listCPEvaluation" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPEvaluationListVO">
+        select
+        a.id as id,
+        a.cp_id,
+        a.reserve_id,
+        a.star,
+        a.supporting_facility_star as supportingFacilityStar,
+        a.service_attitude_star as serviceAttitudeStar,
+        a.hygienic_condition_star as hygienicConditionStar,
+        a.label,
+        a.content,
+        a.user_nick_name,
+        a.user_icon,
+        a.create_time
+        from
+        cp_evaluation a
+        where a.cp_id = #{cpId,jdbcType=VARCHAR}
+        order by a.create_time desc
+    </select>
+
+    <!-- 新增-->
+    <insert id="insertSelective">
+        insert into cp_evaluation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="reserveId != null">
+                reserve_id,
+            </if>
+            <if test="star != null">
+                star,
+            </if>
+            <if test="supportingFacilityStar != null">
+                supporting_facility_star,
+            </if>
+            <if test="serviceAttitudeStar != null">
+                service_attitude_star,
+            </if>
+            <if test="hygienicConditionStar != null">
+                hygienic_condition_star,
+            </if>
+            <if test="label != null">
+                label,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="userCode != null">
+                user_code,
+            </if>
+            <if test="userNickName != null">
+                user_nick_name,
+            </if>
+            <if test="userIcon != null">
+                user_icon,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="cpId != null">
+                #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="reserveId != null">
+                #{reserveId,jdbcType=VARCHAR},
+            </if>
+            <if test="star != null">
+                #{star,jdbcType=INTEGER},
+            </if>
+            <if test="supportingFacilityStar != null">
+                #{supportingFacilityStar,jdbcType=INTEGER},
+            </if>
+            <if test="serviceAttitudeStar != null">
+                #{serviceAttitudeStar,jdbcType=INTEGER},
+            </if>
+            <if test="hygienicConditionStar != null">
+                #{hygienicConditionStar,jdbcType=INTEGER},
+            </if>
+            <if test="label != null">
+                #{label,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null">
+                #{userCode,jdbcType=BIGINT},
+            </if>
+            <if test="userNickName != null">
+                #{userNickName,jdbcType=VARCHAR},
+            </if>
+            <if test="userIcon != null">
+                #{userIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+        </trim>
+    </insert>
+
+    <!--文化宫评价星级排名-->
+    <select id="listCPStar" resultType="com.inspur.vista.labor.cp.entity.CPPlaceStarListVO">
+        select
+        b.name,cant.CANT_NAME as district,a.*
+        from cp_info b
+        left join pub.organ organ on organ.ORGAN_ID=b.labor_id
+        left join pub.pub_cant cant on cant.CANT_CODE=b.district
+        left join
+        (select
+        cp_id as cpId,
+        cast(avg(star)as decimal (2,1)) as star,
+        cast(avg(supporting_facility_star)as decimal(2,1)) as supportingFacilityStar,
+        cast(avg(service_attitude_star)as decimal(2,1)) as serviceAttitudeStar,
+        cast(avg(hygienic_condition_star)as decimal(2,1)) as hygienicConditionStar
+        from cp_evaluation
+        group by cpId
+        ) a
+        on a.cpId = b.id
+        where organ.STRU_PATH like CONCAT(#{struPath,jdbcType=VARCHAR}, '%') and b.state = 1
+        order by
+        <choose>
+            <when test="starSpecies == 'supportingFacilityStar'">
+                supportingFacilityStar
+            </when>
+            <when test="starSpecies == 'serviceAttitudeStar'">
+                serviceAttitudeStar
+            </when>
+            <when test="starSpecies == 'hygienicConditionStar'">
+                hygienicConditionStar
+            </when>
+            <otherwise>
+                star
+            </otherwise>
+        </choose>
+        desc
+    </select>
+
+    <select id="selectByCpId" resultType="com.inspur.vista.labor.cp.entity.CPStarVO">
+        select
+        cp_id as cpId,
+        cast(avg(star)as decimal (2,1)) as star,
+        cast(avg(supporting_facility_star)as decimal(2,1)) as supportingFacilityStar,
+        cast(avg(service_attitude_star)as decimal(2,1)) as serviceAttitudeStar,
+        cast(avg(hygienic_condition_star)as decimal(2,1)) as hygienicConditionStar
+        from
+        cp_evaluation
+        where cp_id = #{cpId,jdbcType=VARCHAR}
+    </select>
+</mapper>

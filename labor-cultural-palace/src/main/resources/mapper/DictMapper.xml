@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.DictMapper">
+
+    <select id="listDictItem" resultType="com.inspur.vista.labor.cp.entity.DictItemVO">
+        SELECT
+        item_code, dict_code, item_value, xh, parent_code
+        FROM pub_dict_item
+        WHERE state = 1
+        <if test="dictCode != null and dictCode != ''">
+            AND dict_code = #{dictCode,jdbcType=VARCHAR}
+        </if>
+        <if test="parentCode != null and parentCode != ''">
+            AND parent_code = #{parentCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="getDictItem" resultType="com.inspur.vista.labor.cp.entity.DictItemVO">
+        SELECT
+        item_code, dict_code, item_value, xh, parent_code
+        FROM pub_dict_item
+        WHERE state =1 AND item_code=#{itemCode,jdbcType=VARCHAR} AND dict_code = #{dict_code,jdbcType=VARCHAR}
+    </select>
+</mapper>

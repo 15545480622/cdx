@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPKpisumMonthMapper">
+
+    <!--通过id获取数据-->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPKpisumMonthDetailVO">
+        select
+        id,
+        cp_id,
+        energy_consum_water,
+        energy_consum_electric,
+        visitors_flowrate,
+        visitors_flowrate_percent,
+        activity_num,
+        venue_utilization,
+        plan_sum_num,
+        plan_down_num,
+        stat_time
+		from
+	    cp_kpisum_month
+        where
+	    id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPKpisumMonth" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPKpisumMonthListVO">
+        select
+        id,
+        cp_id,
+        energy_consum_water,
+        energy_consum_electric,
+        visitors_flowrate,
+        visitors_flowrate_percent,
+        activity_num,
+        venue_utilization,
+        plan_sum_num,
+        plan_down_num,
+        stat_time
+        from
+        cp_kpisum_month
+        where cp_id = #{cpId,jdbcType=BIGINT}
+        order by create_time desc
+    </select>
+
+    <!--新增工作计划-->
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into cp_kpisum_month
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cpId != null">
+                cp_id,
+            </if>
+            <if test="energyConsumWater != null">
+                energy_consum_water,
+            </if>
+            <if test="energyConsumElectric != null">
+                energy_consum_electric,
+            </if>
+            <if test="visitorsFlowrate != null">
+                visitors_flowrate,
+            </if>
+            <if test="visitorsFlowratePercent != null">
+                visitors_flowrate_percent,
+            </if>
+            <if test="activityNum != null">
+                activity_num,
+            </if>
+            <if test="venueUtilization != null">
+                venue_utilization,
+            </if>
+            <if test="planSumNum != null">
+                plan_sum_num,
+            </if>
+            <if test="planDownNum != null">
+                plan_down_num,
+            </if>
+            <if test="statTime != null">
+                stat_time,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="cpId != null">
+                #{cpId,jdbcType=BIGINT},
+            </if>
+            <if test="energyConsumWater != null">
+                #{energyConsumWater,jdbcType=DOUBLE},
+            </if>
+            <if test="energyConsumElectric != null">
+                #{energyConsumElectric,jdbcType=DOUBLE},
+            </if>
+            <if test="visitorsFlowrate != null">
+                #{visitorsFlowrate,jdbcType=INTEGER},
+            </if>
+            <if test="visitorsFlowratePercent != null">
+                #{visitorsFlowratePercent,jdbcType=DOUBLE},
+            </if>
+            <if test="activityNum != null">
+                #{activityNum,jdbcType=INTEGER},
+            </if>
+            <if test="venueUtilization != null">
+                #{venueUtilization,jdbcType=DOUBLE},
+            </if>
+            <if test="planSumNum != null">
+                #{planSumNum,jdbcType=INTEGER},
+            </if>
+            <if test="planDownNum != null">
+                #{planDownNum,jdbcType=INTEGER},
+            </if>
+            <if test="statTime != null">
+                #{statTime,jdbcType=CHAR},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

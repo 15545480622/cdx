@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inspur.vista.labor.cp.dao.CPHonorMapper">
+
+    <!--通过id获取数据-->
+    <select id="selectByPrimaryKey" resultType="com.inspur.vista.labor.cp.entity.CPHonorInfoVO">
+        select
+        id,
+        honor_time as honorTime,
+        honor_level as honorLevel,
+        honor_name as honorName,
+        honor_instruction as honorInstruction
+		from
+	    cp_honor_info
+        where
+	    id = #{id,jdbcType=VARCHAR} and state = 1
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listCPHonorInfo" parameterType="java.util.Map"
+            resultType="com.inspur.vista.labor.cp.entity.CPHonorListVO">
+        select
+        id,
+        honor_time as honorTime,
+        honor_level as honorLevel,
+        honor_name as honorName,
+        honor_instruction as honorInstruction
+        from
+        cp_honor_info
+        where state = 1 and cp_id = #{cpId,jdbcType=VARCHAR}
+        <if test="honorName != null and honorName != ''">
+            AND honor_name LIKE CONCAT('%', #{honorName,jdbcType=VARCHAR}, '%')
+        </if>
+        <if test="honorTime != null and honorTime != ''">
+            AND YEAR(honor_time) = #{honorTime,jdbcType=DATE}
+        </if>
+        order by create_time desc
+    </select>
+
+    <!--新增荣誉信息-->
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into cp_honor_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+                cp_id,
+            <if test="honorTime != null">
+                honor_time,
+            </if>
+            <if test="honorLevel != null">
+                honor_level,
+            </if>
+            <if test="honorName != null">
+                honor_name,
+            </if>
+            <if test="honorInstruction != null">
+                honor_instruction,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="creator != null">
+                creator,
+            </if>
+            create_time,
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+                #{cpId,jdbcType=VARCHAR},
+            <if test="honorTime != null">
+                #{honorTime,jdbcType=DATE},
+            </if>
+            <if test="honorLevel != null">
+                #{honorLevel,jdbcType=INTEGER},
+            </if>
+            <if test="honorName != null">
+                #{honorName,jdbcType=VARCHAR},
+            </if>
+            <if test="honorInstruction != null">
+                #{honorInstruction,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!--修改荣誉信息-->
+    <update id="updateByPrimaryKeySelective">
+        update cp_honor_info
+        <set>
+            <if test="cpId != null">
+                cp_id = #{cpId,jdbcType=VARCHAR},
+            </if>
+            <if test="honorTime != null">
+                honor_time = #{honorTime,jdbcType=DATE},
+            </if>
+            <if test="honorLevel != null">
+                honor_level = #{honorLevel,jdbcType=INTEGER},
+            </if>
+            <if test="honorName != null">
+                honor_name = #{honorName,jdbcType=VARCHAR},
+            </if>
+            <if test="honorInstruction != null">
+                honor_instruction = #{honorInstruction,jdbcType=VARCHAR},
+            </if>
+            modifier = #{modifier,jdbcType=VARCHAR},
+            update_time = now(),
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单个删除荣誉信息-->
+    <update id="deleteCPHonorInfoById" parameterType="java.util.Map">
+        update cp_honor_info
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where
+	    id = #{id,jdbcType=VARCHAR}
+	</update>
+
+    <!--批量删除荣誉信息-->
+    <update id="batchDeleteCPHonorInfoById" parameterType="java.util.Map">
+        update cp_honor_info
+        set state = 0,
+        modifier = #{modifier,jdbcType=VARCHAR},
+        update_time = now()
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+
+</mapper>

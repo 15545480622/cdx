@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.inspur.vista.labor.cp.dao.OrganCantMapper">
+
+    <select id="selectByOrganId" resultType="com.inspur.vista.labor.cp.entity.OrganCantEntity">
+        SELECT * FROM pub.pub_organ_cant
+        WHERE ORGAN_ID = #{organId,jdbcType=VARCHAR} AND in_use = 1
+    </select>
+    <select id="selectByCantCode" resultType="com.inspur.vista.labor.cp.entity.OrganCantEntity">
+        SELECT * FROM pub.pub_organ_cant
+        WHERE CANT_CODE = #{cantCode,jdbcType=VARCHAR} AND in_use = 1
+    </select>
+
+</mapper>

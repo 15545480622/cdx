@@ -1,0 +1,176 @@
+server:
+  port: 81
+  servlet:
+    context-path: /labor-cp
+    session:
+      store-dir: redis
+  tomcat:
+    uri-encoding: UTF-8
+    max-connections: ${SERVER_MAX_CONNECTIONS:100000}
+    max-threads: ${SERVER_MAX_THREADS:5000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [health,metrics]
+  endpoint:
+    metrics:
+      enabled: true
+    health:
+      show-details: always
+  metrics:
+    export:
+      atlas:
+        enabled: false
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+  thymeleaf:
+    prefix: classpath:/templates/
+    # 检查模板位置是否存在
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    servlet:
+      # Content-Type值
+      content-type: text/html
+    # 应用于模板的模板模式。
+    mode: HTML
+    cache: false
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  profiles:
+    active:  pay,${PROFILES_ACTIVE:dev}
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: ${DS_MIN_IDLE:10}
+      maximum-pool-size: ${DS_MAX_ACTIVE:200}
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  redis:
+    lettuce:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-active: ${REDIS_MAX_ACTIVE:200}
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-wait: ${REDIS_MAX_WAIT:10000}
+        # 连接池中的最大空闲连接 默认 8
+        max-idle: ${REDIS_MAX_IDLE:10}
+        # 连接池中的最小空闲连接 默认 0
+        min-idle: ${REDIS_MIN_IDLE:10}
+  quartz:
+    #相关属性配置
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: ${QUARTZ_INSTANCE:quartzSchedulerTest}
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: false
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    #数据库方式
+    job-store-type: JDBC
+    #初始化表结构
+    jdbc:
+      initialize-schema: NEVER
+
+#  mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  typeAliasesPackage: com.inspur.vista.labor.cp.entity
+  global-config:
+    id-type: 0
+    field-strategy: 2
+    db-column-underline: true
+    refresh-mapper: true
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+
+cp:
+  manage-page: http://117.73.3.171:88/cpm
+  app-page: http://117.73.3.171:88/cp-h5
+  app-activity-page: http://117.73.3.171:88/cp-activity-h5
+  gateway: http://117.73.3.171:88/labor_router/auth_redirect?path=whg
+
+uac:
+  #  获取客户端token
+  url_getClientToken: ${host.uac}/oauth/token
+  # 通过手机号获取用户
+  url_get_user_with_phone: ${host.uac}/api/v1/user_info/%s?type=phone
+  # 通过用户编码获取用户
+  url_get_user_with_user_code: ${host.uac}/api/v1/user_info/%s?type=code
+  # 通过memberId获取会员信息
+  url_get_member_with_member_id: ${host.uac}/api/v1/labor_member/%s
+bsp-gateway:
+  #  修改用户用户名
+  url_change_user_name: ${host.bsp-gateway}/api/user/username/change
+  # 新增用户
+  url_add_user: ${host.bsp-gateway}/api/user/add
+  # 删除用户
+  url_del_user: ${host.bsp-gateway}/api/user/del
+  # 校验用户密码是否正确
+  url_verify_user: ${host.bsp-gateway}/api/user/verify
+  # 新增组织
+  url_add_organ: ${host.bsp-gateway}/api/organ/add
+  # 删除组织
+  url_del_organ: ${host.bsp-gateway}/api/organ/remove
+oss:
+  # 上传并返回文件相对路径
+  upload_file: ${host.oss}/file/path/upload
+  # 文件下载的host地址
+  download_host: ${OSS_FILE_DOWNLOAD_HOST:http://117.73.3.171:88/oss-download/}
+  # 文件上传的referer地址
+  referer: ${REFERER:http://117.73.3.171:88}
+activity:
+  #获取直属工会白名单区划编码
+  url_white_cantcode: http://117.73.3.171:88/welfare-api/activity/white/listCouponRecord
+  #创建外链活动
+  url_create_activity: http://117.73.3.171:88/welfare-api/activity/createCpactivity
+  #修改外链活动
+  url_update_activity: http://117.73.3.171:88/welfare-api/activity/updateCpactivity
+
+repeat:
+  submit:
+    # 重复提交键值失效时间，单位：分钟
+    expireTime: ${STAGE_REPEAT_SUBMIT_EXPIRE:5}
+    # 重复提交模式，true：header中必须包含uuid，false：允许不包含uuid的请求
+    isStrictMode: ${STAGE_REPEAT_SUBMIT_STRICTMODE:false}
+
+config:
+  # 是否开启swagger,生产环境需要设为false
+  swagger-ui-open: true
+  # 订单有效时间，单位分钟
+  reserve-time: 20
+
+
+logging:
+  pattern:
+    console: "%d{yyyy/MM/dd-HH:mm:ss} [%thread] %-5level %logger- %msg%n"
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.inspur: ${LOG_LEVEL:DEBUG}
